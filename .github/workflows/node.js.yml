@@ -49,7 +49,7 @@ jobs:
       - name: Create zip archive with exe
         run: |
           mkdir -p zip_temp
-          cp ./dist/*.exe zip_temp/
+          cp ./dist/slpb-win32-x64/*.exe zip_temp/
           zip -r ServerListPlayBetter.zip zip_temp/
 
       - name: Upload build artifact (tar.gz)
