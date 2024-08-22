@@ -1,9 +1,10 @@
-name: Build and Deploy
+name: Build and Release
 
 on:
   push:
     branches:
       - master
+  workflow_dispatch:
 
 jobs:
   build:
@@ -27,3 +28,47 @@ jobs:
 
       - name: Build project
         run: npm run buildWin
+
+      - name: Archive build artifacts
+        run: tar -czvf buildWin.tar.gz ./path-to-build-output-folder
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: buildWin
+          path: buildWin.tar.gz
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: buildWin
+          path: ./
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ github.run_number }}
+          release_name: Release ${{ github.run_number }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./buildWin.tar.gz
+          asset_name: buildWin.tar.gz
+          asset_content_type: application/gzip
