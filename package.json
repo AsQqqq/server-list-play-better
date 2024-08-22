@@ -6,8 +6,8 @@
   "description": "Список серверов Counter Strike 2",
   "main": "index.js",
   "scripts": {
-    "buildWin": "electron-packager . --icon=./assets/favicon.ico --prune=true --out=dist",
-    "start": "electron ."
+    "start": "electron .",
+    "buildWin": "electron-packager . slpb --platform=win32 --arch=x64 --icon=./assets/favicon.ico --prune=true --out=dist"
   },
   "build": {
     "appId": "com.asqdanil.slpb"
