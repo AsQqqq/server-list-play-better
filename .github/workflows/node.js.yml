@@ -42,21 +42,12 @@ jobs:
         run: |
           ls -la ./dist
           ls ./dist
-      
-      - name: Archive build artifacts
-        run: tar -czvf buildWin.tar.gz ./dist
 
       - name: Create zip archive with exe
         run: |
           mkdir -p zip_temp
           cp ./dist/slpb-win32-x64/*.exe zip_temp/
           zip -r ServerListPlayBetter.zip zip_temp/
-
-      - name: Upload build artifact (tar.gz)
-        uses: actions/upload-artifact@v3
-        with:
-          name: buildWin
-          path: buildWin.tar.gz
 
       - name: Upload build artifact (zip)
         uses: actions/upload-artifact@v3
@@ -72,11 +63,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Download build artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: buildWin
-
       - name: Download zip artifact
         uses: actions/download-artifact@v3
         with:
@@ -85,7 +71,6 @@ jobs:
       - name: Move downloaded artifacts
         run: |
           mkdir -p artifacts
-          mv buildWin.tar.gz ./artifacts/
           mv ServerListPlayBetter.zip ./artifacts/
 
       - name: Create Release
@@ -98,14 +83,6 @@ jobs:
           release_name: Release v${{ github.sha }}
           draft: false
           prerelease: false
-
-      - name: Upload Release Asset (tar.gz)
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./artifacts/buildWin.tar.gz
-          asset_name: buildWin.tar.gz
-          asset_content_type: application/gzip
 
       - name: Upload Release Asset (zip)
         uses: actions/upload-release-asset@v1
