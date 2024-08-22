@@ -5,12 +5,14 @@ const { updateElectronApp, UpdateSourceType } = require('update-electron-app')
 const packageJson = require('./package.json');
 
 
-updateElectronApp({
-    repo: 'AsQqqq/server-list-play-better', // Укажите ваш репозиторий на GitHub
-    updateInterval: '5 minutes', // На каком интервале проверять обновления (например, каждый час)
-    // updateInterval: '5 minutes', - если нужно чаще
-  });
-
+try {
+    updateElectronApp({
+        repo: 'AsQqqq/server-list-play-better',
+        updateInterval: '5 minutes'
+    });
+} catch (error) {
+    console.error('Ошибка при инициализации обновлений:', error.message);
+}
 
 function createWindow() {
     const win = new BrowserWindow({
