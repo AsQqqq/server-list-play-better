@@ -191,3 +191,30 @@ div.win-btn:active {
 .inline .title-text {
     margin-left: 2px;
 }
+
+.empty-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.image-empty {
+    width: 50%;
+    height: auto;
+    max-width: 250px;
+}
+
+.empty-list {
+    pointer-events: none;
+}
+
+.empty-list img,
+.empty-list .title-text {
+    pointer-events: auto;
+}

@@ -17,7 +17,7 @@ html, body {
     margin-bottom: 10px;
 }
 
-.error-message .refresh-instruction {
+.refresh-instruction {
     font-size: 20px;
     color: orange;
 }
