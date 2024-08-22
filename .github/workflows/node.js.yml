@@ -39,7 +39,9 @@ jobs:
         run: npm run buildWin
       
       - name: List files in dist directory
-        run: ls -la ./dist
+        run: |
+          ls -la ./dist
+          ls ./dist
       
       - name: Archive build artifacts
         run: tar -czvf buildWin.tar.gz ./dist
