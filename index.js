@@ -4,7 +4,7 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const { updateElectronApp, UpdateSourceType } = require('update-electron-app')
 const log = require('electron-log');
 
-# test
+// test
 autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
 log.info('App starting...');

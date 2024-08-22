@@ -30,7 +30,7 @@ jobs:
         run: npm run buildWin
 
       - name: Archive build artifacts
-        run: tar -czvf buildWin.tar.gz ./path-to-build-output-folder
+        run: tar -czvf buildWin.tar.gz ./dist
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v3
@@ -50,7 +50,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: buildWin
-          path: ./
+          path: ./buildWin.tar.gz
 
       - name: Create GitHub Release
         id: create_release
