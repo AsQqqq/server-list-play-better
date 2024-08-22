@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../style/style.css">
+    <link rel="stylesheet" href="../style/block.css">
+    <link rel="stylesheet" href="../style/load.css">
+    <link rel="stylesheet" href="../style/error.css">
+    <link rel="stylesheet" href="../style/font-awesome.min.css">
+</head>
+<body>
+    <div class="app">
+        <div class="header">
+            <div class="sp"></div>
+            <div class="icon">
+                <img class="icon-image" src="../image/icon_main.png" alt="Icon">
+            </div>
+            <div class="title">
+                <div class="title-text">Список серверов</div>
+            </div>
+            <div class="win-btn btn-help tooltip">
+                <i class="fa fa-question"></i>
+                <span class="tooltiptext">Ctrl + R для обновления страницы</span>
+            </div>
+            <div class="win-btn btn-min">
+                <i class="fa fa-window-minimize"></i>
+            </div>
+            <div class="win-btn btn-max">
+                <i class="fa fa-window-maximize"></i>
+            </div>
+            <div class="win-btn btn-close">
+                <i class="fa fa-times"></i>
+            </div>
+            <div class="sp"></div>
+        </div>
+
+        <div id="content">
+            <div id="loading" class="loader">
+                <div class="inner one"></div>
+                <div class="inner two"></div>
+                <div class="inner three"></div>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="../script/common.js"></script>
+    <script type="module" src="../script/index.js"></script>
+    <script> require("../render.js"); </script>
+</body>
+</html>

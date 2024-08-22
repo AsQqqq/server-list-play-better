@@ -1,0 +1,216 @@
+.title-text {
+    cursor: default;
+}
+
+#content {
+    margin: 40px; /* устанавливаем отступы от краёв */
+    display: flex;
+    flex-wrap: wrap; /* позволяет блокам переноситься на новую строку */
+    gap: 20px; /* промежуток между блоками */
+}
+
+.title-text {
+    position: relative;
+    z-index: 2;
+}
+
+div.block {
+    border-radius: 15px;
+    width: 150px;
+    height: 250px;
+    background-color: black;
+    position: relative;
+    overflow: hidden;
+    margin: 0px;
+}
+
+.image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 15px;
+    background-image: 
+        linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(0, 0, 0, 0.986) 80%),
+        url('../image/de_mirage.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 1;
+    scale: 110%;
+    filter: blur(0.1px);
+    transition: transform 0.4s ease, filter 0.4s ease;
+}
+
+.map {
+    position: absolute;
+    opacity: 0;
+    margin-bottom: 10px;
+    text-align: center;
+    font-size: 15px;
+    width: 100%;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgb(205, 77, 8);
+    transition: opacity 0.5s ease, margin-bottom 0.5s ease;
+}
+
+.block:hover .image {
+    transform: scale(1.1);
+    filter: blur(1.2px);
+}
+
+.block:hover .ping {
+    opacity: 70%;
+    transition: opacity 0.3s ease, scale 0.3s ease;
+}
+
+.block:hover .ping:hover {
+    opacity: 100%;
+    scale: 170%;
+    transition: opacity 0.3s ease, scale 0.3s ease;
+}
+
+.block.people:hover {
+    transform: scale(0.8);
+    transition: transform 0.5s ease;
+}
+
+.block:hover .circle-icon {
+    opacity: 30%;
+    filter: blur(20px); 
+    transition: opacity 1.5s ease, filter 0.4s ease;
+}
+
+.block:hover .server_name {
+    scale: 102%;
+    transition: scale 0.5s ease;
+}
+
+.block:hover .people {
+    scale: 102%;
+    transition: scale 0.5s ease;
+}
+
+.block:hover .map {
+    opacity: 1;
+    margin-bottom: 25px;
+    transition: opacity 0.5s ease, margin-bottom 0.5s ease;
+}
+
+.ping {
+    position: absolute;
+    opacity: 70%;
+    font-size: 6px;
+    margin-left: 15px;
+    margin-top: 10px;
+    color: rgb(60, 255, 0);
+    transition: opacity 0.3s ease, scale 0.3s ease;
+}
+
+.people {
+    position: absolute;
+    font-size: 14px;
+    margin-top: 5px;
+    margin-left: 50%;
+    transform: translate(-50%);
+    color: rgb(255, 255, 255);
+    transition: scale 0.5s ease;
+}
+
+.server_name {
+    margin-bottom: 13px;
+    text-align: center;
+    font-size: 10px;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgb(255, 255, 255);
+    transition: scale 0.5s ease;
+}
+
+.play {
+    display: flex;
+    align-items: center; /* Центрируем по вертикали */
+    justify-content: center; /* Центрируем по горизонтали */
+    position: absolute; /* Делает позиционирование относительно блока */
+    top: 50%; /* Поднимаем на 50% высоты блока */
+    left: 50%; /* Сдвигаем на 50% ширины блока */
+    transform: translate(-50%, -50%); /* Центрируем контейнер */
+    z-index: 3; /* Устанавливаем уровень слоя выше круга */
+}
+
+.play-icon, .circle-icon {
+    position: absolute; /* Абсолютное позиционирование для обеих иконок */
+}
+
+.play-icon {
+    z-index: 3; /* Устанавливаем иконку Play выше круга */
+}
+
+.play-icon img {
+    margin-left: 4px;
+    display: absolute;
+    scale: 50%;
+    transition: scale 0.2s ease;
+}
+
+.play-icon img:hover {
+    cursor: pointer;
+    scale: 55%;
+    transition: scale 0.2s ease;
+}
+
+.circle-icon {
+    width: 70px; /* Размер круга */
+    z-index: 2; /* Устанавливаем круг ниже иконки Play */
+}
+
+.circle-icon img {
+    display: absolute;
+    scale: 140%;
+}
+
+/* Также нужно задать центрирование круга */
+.circle-icon {
+    filter: blur(15px);  
+    opacity: 10%;
+    top: 50%; /* Отступ от верхней грани */
+    left: 50%; /* Установка в центр по горизонтали */
+    transform: translate(-50%, -50%); /* Центрируем круг по обоим направлениям */
+    transition: opacity 1.5s ease, filter 0.4s ease;
+}
+
+.play img {
+    width: 70px; /* Размер иконки Play */
+    filter: drop-shadow(0px 0px 5px #0101017c);
+}
+
+.ping-green {
+    color: rgb(0, 255, 0);
+}
+
+.ping-yellow {
+    color: yellow;
+}
+
+.ping-red {
+    color: red;
+}
+
+
+.invisible {
+    opacity: 0;
+    filter: blur(20px);
+    transition: opacity 0.5s ease, filter 0.5s ease;
+}
+
+.visible {
+    opacity: 1;
+    filter: blur(0px);
+    transition: opacity 0.5s ease, filter 0.5s ease;
+}
