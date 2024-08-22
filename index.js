@@ -2,19 +2,13 @@ const path = require('path');
 const url = require('url');
 const { app, BrowserWindow, ipcMain } = require('electron');
 const { updateElectronApp, UpdateSourceType } = require('update-electron-app')
-const log = require('electron-log');
-
-// test
-autoUpdater.logger = log;
-autoUpdater.logger.transports.file.level = 'info';
-log.info('App starting...');
+const packageJson = require('./package.json');
 
 
 updateElectronApp({
     repo: 'AsQqqq/server-list-play-better', // Укажите ваш репозиторий на GitHub
     updateInterval: '5 minutes', // На каком интервале проверять обновления (например, каждый час)
     // updateInterval: '5 minutes', - если нужно чаще
-    logger: require('electron-log')
   });
 
 
@@ -30,10 +24,20 @@ function createWindow() {
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
-            enableRemoteModule: true
+            enableRemoteModule: true,
+            devTools: false
         }
     });
     // win.webContents.openDevTools();
+
+
+    win.webContents.on('did-finish-load', () => {
+        win.webContents.send('app-info', {
+            version: packageJson.version,
+            server_version: packageJson.server_version,
+            date: packageJson.date
+        });
+    });
 
     ipcMain.on('minimize-window', () => {
         win.minimize();

@@ -4,8 +4,6 @@ const minimizeButton = document.querySelector('.btn-min');
 const maximizeButton = document.querySelector('.btn-max');
 const closeButton = document.querySelector('.btn-close');
 
-let iconBtnMax = maximizeButton.children[0];
-
 minimizeButton.addEventListener('click', () => {
     ipcRenderer.send('minimize-window');
 });
@@ -20,4 +18,10 @@ maximizeButton.addEventListener('click', () => {
 });
 closeButton.addEventListener('click', () => {
     ipcRenderer.send('close-window');
+});
+
+ipcRenderer.on('app-info', (event, appInfo) => {
+    document.getElementById('version').innerText = appInfo.version;
+    document.getElementById('server_version').innerText = appInfo.server_version;
+    document.getElementById('date').innerText = appInfo.date;
 });

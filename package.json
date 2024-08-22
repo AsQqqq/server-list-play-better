@@ -1,6 +1,8 @@
 {
   "name": "slpb",
-  "version": "0.0.2",
+  "version": "0.0.3 beta",
+  "server_version": "0.0.2 beta",
+  "date": "2024-08-22",
   "description": "Список серверов Counter Strike 2",
   "main": "index.js",
   "scripts": {

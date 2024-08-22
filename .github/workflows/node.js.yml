@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     strategy:
       matrix:
@@ -32,19 +32,11 @@ jobs:
       - name: Archive build artifacts
         run: tar -czvf buildWin.tar.gz ./dist
 
-      - name: Setup Inno Setup
-        run: choco install innosetup
-
-      - name: Compile Inno Setup Script
-        run: "C:\\Program Files (x86)\\Inno Setup 6\\ISCC.exe" /Q /Ooutput /F"Setup" path_to_your_script.iss
-
-      - name: Upload build and installer artifacts
+      - name: Upload build artifact
         uses: actions/upload-artifact@v3
         with:
           name: buildWin
-          path: |
-            buildWin.tar.gz
-            output/Setup.exe
+          path: buildWin.tar.gz
 
   release:
     needs: build
@@ -54,10 +46,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Download build and installer artifacts
+      - name: Download build artifact
         uses: actions/download-artifact@v3
         with:
           name: buildWin
+          path: ./buildWin.tar.gz
+
+      - name: Move downloaded artifact to proper location
+        run: mv ./buildWin.tar.gz/buildWin.tar.gz ./buildWin.tar.gz
 
       - name: Create GitHub Release
         id: create_release
@@ -70,16 +66,12 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Upload Release Assets
+      - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: |
-            buildWin.tar.gz
-            output/Setup.exe
-          asset_name: |
-            buildWin.tar.gz
-            Setup.exe
-          asset_content_type: application/octet-stream
+          asset_path: ./buildWin.tar.gz
+          asset_name: buildWin.tar.gz
+          asset_content_type: application/gzip

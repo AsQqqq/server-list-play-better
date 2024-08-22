@@ -31,6 +31,10 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 html {
@@ -166,4 +170,24 @@ div.win-btn:active {
 .background .block {
     filter: blur(10px);
     opacity: 0.5;
+}
+
+#app-info {
+    color: rgba(255, 255, 255, 0.065);
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    text-align: right;
+    font-size: 10px;
+}
+
+.inline {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+    justify-content: flex-end;
+}
+
+.inline .title-text {
+    margin-left: 2px;
 }
