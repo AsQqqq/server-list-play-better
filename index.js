@@ -2,14 +2,20 @@ const path = require('path');
 const url = require('url');
 const { app, BrowserWindow, ipcMain } = require('electron');
 const { updateElectronApp, UpdateSourceType } = require('update-electron-app')
+const log = require('electron-log');
+
+
+autoUpdater.logger = log;
+autoUpdater.logger.transports.file.level = 'info';
+log.info('App starting...');
 
 
 updateElectronApp({
-    updateSource: {
-      type: UpdateSourceType.StaticStorage,
-      baseUrl: `https://my-bucket.s3.amazonaws.com/my-app-updates/${process.platform}/${process.arch}`
-    }
-  })
+    repo: 'AsQqqq/server-list-play-better', // Укажите ваш репозиторий на GitHub
+    updateInterval: '5 minutes', // На каком интервале проверять обновления (например, каждый час)
+    // updateInterval: '5 minutes', - если нужно чаще
+    logger: require('electron-log')
+  });
 
 
 function createWindow() {
