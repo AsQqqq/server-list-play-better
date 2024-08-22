@@ -50,10 +50,10 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: buildWin
-          path: ./buildWin.tar.gz
+          path: ./buildWin
 
       - name: Move downloaded artifact to proper location
-        run: mv ./buildWin.tar.gz/buildWin.tar.gz ./buildWin.tar.gz
+        run: mv ./buildWin/buildWin.tar.gz ./buildWin.tar.gz
 
       - name: Create GitHub Release
         id: create_release

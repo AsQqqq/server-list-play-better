@@ -1,9 +1,8 @@
 const path = require('path');
 const url = require('url');
 const { app, BrowserWindow, ipcMain } = require('electron');
-const { updateElectronApp, UpdateSourceType } = require('update-electron-app')
+const { updateElectronApp, UpdateSourceType } = require('update-electron-app');
 const packageJson = require('./package.json');
-
 
 try {
     updateElectronApp({
@@ -12,7 +11,7 @@ try {
     });
 } catch (error) {
     console.error('Ошибка при инициализации обновлений:', error.message);
-}
+};
 
 
 // Тестовое обновление
