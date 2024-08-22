@@ -14,6 +14,8 @@ try {
     console.error('Ошибка при инициализации обновлений:', error.message);
 }
 
+
+// Тестовое обновление
 function createWindow() {
     const win = new BrowserWindow({
         width: 800,
@@ -27,7 +29,7 @@ function createWindow() {
             nodeIntegration: true,
             contextIsolation: false,
             enableRemoteModule: true,
-            devTools: false
+            devTools: true
         }
     });
     // win.webContents.openDevTools();
