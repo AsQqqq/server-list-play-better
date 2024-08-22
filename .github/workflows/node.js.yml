@@ -32,11 +32,23 @@ jobs:
       - name: Archive build artifacts
         run: tar -czvf buildWin.tar.gz ./dist
 
-      - name: Upload build artifact
+      - name: Create zip archive with exe
+        run: |
+          mkdir -p zip_temp
+          cp ./dist/*.exe zip_temp/
+          zip -r ServerListPlayBetter.zip zip_temp/
+
+      - name: Upload build artifact (tar.gz)
         uses: actions/upload-artifact@v3
         with:
           name: buildWin
           path: buildWin.tar.gz
+
+      - name: Upload build artifact (zip)
+        uses: actions/upload-artifact@v3
+        with:
+          name: ServerListPlayBetter
+          path: ServerListPlayBetter.zip
 
   release:
     needs: build
@@ -46,32 +58,44 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Download build artifact
+      - name: Download build artifacts
         uses: actions/download-artifact@v3
         with:
           name: buildWin
-          path: ./buildWin
 
-      - name: Move downloaded artifact to proper location
-        run: mv ./buildWin/buildWin.tar.gz ./buildWin.tar.gz
+      - name: Download zip artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: ServerListPlayBetter
 
-      - name: Create GitHub Release
+      - name: Move downloaded artifacts
+        run: |
+          mv buildWin.tar.gz ./artifacts/
+          mv ServerListPlayBetter.zip ./artifacts/
+
+      - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ github.run_number }}
-          release_name: Release ${{ github.run_number }}
+          tag_name: v${{ github.sha }}
+          release_name: Release v${{ github.sha }}
           draft: false
           prerelease: false
 
-      - name: Upload Release Asset
+      - name: Upload Release Asset (tar.gz)
         uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./buildWin.tar.gz
+          asset_path: ./artifacts/buildWin.tar.gz
           asset_name: buildWin.tar.gz
           asset_content_type: application/gzip
+
+      - name: Upload Release Asset (zip)
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./artifacts/ServerListPlayBetter.zip
+          asset_name: ServerListPlayBetter.zip
+          asset_content_type: application/zip
