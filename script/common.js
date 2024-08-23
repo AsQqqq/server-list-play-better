@@ -29,9 +29,14 @@ ipcRenderer.on('app-info', (event, appInfo) => {
 
 async function loadGitHubVersion() {
     try {
-        const response = await fetch('https://api.github.com/repos/AsQqqq/server-list-play-better/releases/latest');
+        const response = await fetch('https://api.github.com/repos/AsQqqq/server-list-play-better/contents/package.json');
         const data = await response.json();
-        const githubVersion = data.tag_name;
+        
+        // Декодирование base64 содержимого
+        const content = atob(data.content);
+        const packageJson = JSON.parse(content);
+        
+        const githubVersion = packageJson.version;
 
         document.getElementById('github_version').innerText = githubVersion;
     } catch (error) {
@@ -39,4 +44,4 @@ async function loadGitHubVersion() {
     }
 }
 
-loadGitHubVersion()
+loadGitHubVersion();

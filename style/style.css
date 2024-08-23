@@ -172,25 +172,59 @@ div.win-btn:active {
     opacity: 0.5;
 }
 
-#app-info {
-    color: rgba(255, 255, 255, 0.065);
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-    text-align: right;
-    font-size: 10px;
-}
 
 .inline {
-    display: flex;
-    align-items: center;
+    display: flex; /* Позволяем элементам внутри .inline располагаться в строку */
     margin-bottom: 5px;
-    justify-content: flex-end;
+    margin-left: 13px;
+    margin-top: 5px;
 }
 
 .inline .title-text {
     margin-left: 2px;
 }
+
+.app-info {
+    flex-direction: column;
+    opacity: 0;
+    visibility: hidden; /* Скрываем элемент для анимации */
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+    color: rgb(182, 182, 182);
+    position: absolute;
+    bottom: 10px;
+    right: 3px;
+    text-align: right;
+    font-size: 10px;
+    width: 100px;
+    margin-bottom: 5px;
+    backdrop-filter: blur(5px);
+    background-color: rgba(211, 127, 0, 0.085);
+    border-radius: 5px;
+}
+
+.version-app-info {
+    color: rgba(255, 255, 255, 0.056);
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    text-align: right;
+    font-size: 10px;
+    transition: color 0.3s ease; 
+}
+
+.version-app-info:hover {
+    color: rgba(255, 255, 255, 0.367);
+    transition: color 0.3s ease; 
+}
+
+.version-app-info:hover .app-info {
+    visibility: visible;  /* Делаем элемент видимым */
+    opacity: 1;  /* Меняем прозрачность */
+    filter: blur(0);
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+
 
 .empty-list {
     display: flex;
