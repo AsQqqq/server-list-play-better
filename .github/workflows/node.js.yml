@@ -80,13 +80,15 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ github.sha }}
-          release_name: Release v${{ github.sha }}
+          tag_name: v${{ github.ref }}
+          release_name: Release v${{ github.ref }}
           draft: false
           prerelease: false
 
-      - name: Upload Release Asset (zip)
+      - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./artifacts/ServerListPlayBetter.zip
