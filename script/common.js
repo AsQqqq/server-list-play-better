@@ -1,4 +1,5 @@
 const { ipcRenderer } = require('electron');
+const { updateElectronApp, UpdateSourceType } = require('update-electron-app');
 
 const minimizeButton = document.querySelector('.btn-min');
 const maximizeButton = document.querySelector('.btn-max');
@@ -25,3 +26,13 @@ ipcRenderer.on('app-info', (event, appInfo) => {
     document.getElementById('server_version').innerText = appInfo.server_version;
     document.getElementById('date').innerText = appInfo.date;
 });
+
+
+try {
+    updateElectronApp({
+        repo: 'AsQqqq/server-list-play-better',
+        updateInterval: '5 minutes'
+    });
+} catch (error) {
+    console.log('Ошибка при инициализации обновлений:', error.message);
+};

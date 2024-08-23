@@ -1,18 +1,7 @@
 const path = require('path');
 const url = require('url');
 const { app, BrowserWindow, ipcMain } = require('electron');
-const { updateElectronApp, UpdateSourceType } = require('update-electron-app');
 const packageJson = require('./package.json');
-
-try {
-    updateElectronApp({
-        repo: 'AsQqqq/server-list-play-better',
-        updateInterval: '5 minutes'
-    });
-} catch (error) {
-    console.error('Ошибка при инициализации обновлений:', error.message);
-};
-
 
 // Тестовое обновление
 function createWindow() {
