@@ -2,8 +2,25 @@ const path = require('path');
 const url = require('url');
 const { app, BrowserWindow, ipcMain } = require('electron');
 const packageJson = require('./package.json');
+const { updateElectronApp, UpdateSourceType } = require('update-electron-app');
 
-// Тестовое обновление
+
+try {
+    const options = {
+        repo: 'AsQqqq/server-list-play-better',
+        updateInterval: '5 minutes'
+    };
+
+    if (typeof updateElectronApp === 'function') {
+        updateElectronApp(options);
+    } else {
+        console.log('Функция updateElectronApp не определена');
+    }
+} catch (error) {
+    console.log('Ошибка при инициализации обновлений:', error.message);
+}
+
+
 function createWindow() {
     const win = new BrowserWindow({
         width: 800,
