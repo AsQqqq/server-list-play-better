@@ -6,7 +6,7 @@
   "description": "Список серверов Counter Strike 2",
   "main": "index.js",
   "scripts": {
-    "startD": "electron .",
+    "start": "electron .",
     "buildWinP": "set NODE_ENV=production && electron-packager . slpb --platform=win32 --arch=x64 --icon=./assets/favicon.ico --prune=true --out=dist",
     "buildWinD": "set NODE_ENV=development && electron-packager . slpb --platform=win32 --arch=x64 --icon=./assets/favicon.ico --prune=true --out=dist"
   },

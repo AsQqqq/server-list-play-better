@@ -27,3 +27,16 @@ ipcRenderer.on('app-info', (event, appInfo) => {
 });
 
 
+async function loadGitHubVersion() {
+    try {
+        const response = await fetch('https://api.github.com/repos/AsQqqq/server-list-play-better/releases/latest');
+        const data = await response.json();
+        const githubVersion = data.tag_name;
+
+        document.getElementById('github_version').innerText = githubVersion;
+    } catch (error) {
+        console.error('Ошибка при получении версии с GitHub:', error);
+    }
+}
+
+loadGitHubVersion()
