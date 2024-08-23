@@ -5,18 +5,18 @@ const packageJson = require('./package.json');
 const { updateElectronApp, UpdateSourceType } = require('update-electron-app');
 
 
-// const { autoUpdater } = require('electron-updater');
+const { autoUpdater } = require('electron-updater');
 
-// autoUpdater.checkForUpdatesAndNotify();
+autoUpdater.checkForUpdatesAndNotify();
 
-// autoUpdater.on('update-available', (info) => {
-//     console.log(`Update available: ${info.version}`);
-// });
+autoUpdater.on('update-available', (info) => {
+    console.log(`Update available: ${info.version}`);
+});
 
-// autoUpdater.on('update-downloaded', (info) => {
-//     console.log('Update downloaded');
-//     autoUpdater.quitAndInstall();
-// });
+autoUpdater.on('update-downloaded', (info) => {
+    console.log('Update downloaded');
+    autoUpdater.quitAndInstall();
+});
 
 
 function createWindow() {
