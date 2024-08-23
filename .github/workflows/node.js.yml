@@ -49,6 +49,7 @@ jobs:
           cp ./dist/slpb-win32-x64/*.exe zip_temp/
           zip -r ServerListPlayBetter.zip zip_temp/
 
+
       - name: Upload build artifact (zip)
         uses: actions/upload-artifact@v3
         with:
