@@ -1,13 +1,14 @@
 {
   "name": "slpb",
-  "version": "0.0.3.4 beta",
+  "version": "0.0.3.1 beta",
   "server_version": "0.0.2 beta",
   "date": "2024-08-22",
   "description": "Список серверов Counter Strike 2",
   "main": "index.js",
   "scripts": {
     "start": "electron .",
-    "buildWin": "electron-packager . slpb --platform=win32 --arch=x64 --icon=./assets/favicon.ico --prune=true --out=dist"
+    "buildWinP": "set NODE_ENV=production && electron-packager . slpb --platform=win32 --arch=x64 --icon=./assets/favicon.ico --prune=true --out=dist",
+    "buildWinD": "electron-packager . slpb --platform=win32 --arch=x64 --icon=./assets/favicon.ico --prune=true --out=dist"
   },
   "build": {
     "appId": "com.asqdanil.slpb"
