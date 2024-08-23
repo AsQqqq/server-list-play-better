@@ -5,20 +5,18 @@ const packageJson = require('./package.json');
 const { updateElectronApp, UpdateSourceType } = require('update-electron-app');
 
 
-try {
-    const options = {
-        repo: 'AsQqqq/server-list-play-better',
-        updateInterval: '5 minutes'
-    };
+// const { autoUpdater } = require('electron-updater');
 
-    if (typeof updateElectronApp === 'function') {
-        updateElectronApp(options);
-    } else {
-        console.log('Функция updateElectronApp не определена');
-    }
-} catch (error) {
-    console.log('Ошибка при инициализации обновлений:', error.message);
-}
+// autoUpdater.checkForUpdatesAndNotify();
+
+// autoUpdater.on('update-available', (info) => {
+//     console.log(`Update available: ${info.version}`);
+// });
+
+// autoUpdater.on('update-downloaded', (info) => {
+//     console.log('Update downloaded');
+//     autoUpdater.quitAndInstall();
+// });
 
 
 function createWindow() {
