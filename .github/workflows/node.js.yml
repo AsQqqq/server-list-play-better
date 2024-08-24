@@ -37,7 +37,7 @@ jobs:
 
       - name: Build project
         run: npm run buildWinP
-      
+
       - name: List files in dist directory
         run: |
           ls -la ./dist
@@ -48,7 +48,6 @@ jobs:
           mkdir -p zip_temp
           cp -r ./dist/slpb-win32-x64/* zip_temp/
           zip -r ServerListPlayBetter.zip zip_temp/
-
 
       - name: Upload build artifact (zip)
         uses: actions/upload-artifact@v3

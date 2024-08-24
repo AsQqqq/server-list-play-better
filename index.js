@@ -18,11 +18,14 @@ log.transports.console.format = '[{y}-{m}-{d} {h}:{i}:{s}.{ms}] [{level}] {text}
 log.info(`Logging to file: ${logPath}`);
 
 function logEvent(message) {
-    console.log(message); // Дублирование в консоль
-    log.info(message);    // Логирование в файл и в консоль
+    console.log(message);
+    log.info(message);
 }
 
 logEvent(`NODE_ENV: ${process.env.NODE_ENV}`);
+if (process.env.NODE_ENV === undefined) {
+    process.env.NODE_ENV = 'production';
+}
 
 if (process.env.NODE_ENV === 'production') {
     updateElectronApp({
@@ -33,8 +36,6 @@ if (process.env.NODE_ENV === 'production') {
 } else {
     logEvent('App is in development mode; skipping update checks.');
 }
-
-autoUpdater.checkForUpdatesAndNotify();
 
 autoUpdater.on('update-available', (info) => {
     logEvent(`Update available: version ${info.version}`);
@@ -87,13 +88,11 @@ function createWindow() {
         }
     });
 
-    app.on('ready', () => {
-        ipcMain.on('get-state-window', (event) => {
-            logEvent('Window state request');
-            event.returnValue = {
-                isMaximized: win.isMaximized()
-            };
-        });
+    ipcMain.on('get-state-window', (event) => {
+        logEvent('Window state request');
+        event.returnValue = {
+            isMaximized: win.isMaximized()
+        };
     });
 
     ipcMain.on('close-window', () => {
@@ -108,6 +107,9 @@ function createWindow() {
 app.whenReady().then(() => {
     logEvent('App ready, creating window');
     createWindow();
+
+    // Инициализация автообновления здесь
+    autoUpdater.checkForUpdatesAndNotify();
 });
 
 app.on('window-all-closed', () => {

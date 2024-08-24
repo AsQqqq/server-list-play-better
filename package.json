@@ -1,6 +1,6 @@
 {
   "name": "slpb",
-  "version": "0.0.6-beta",
+  "version": "0.0.5-beta",
   "server_version": "0.0.2-beta",
   "date": "2024-08-24",
   "description": "Список серверов Counter Strike 2",
@@ -8,10 +8,14 @@
   "scripts": {
     "start": "cross-env NODE_ENV=production electron .",
     "buildWinP": "cross-env NODE_ENV=production electron-packager . slpb --platform=win32 --arch=x64 --icon=./assets/favicon.ico --prune=true --out=dist",
-    "buildWinD": "set NODE_ENV=development && electron-packager . slpb --platform=win32 --arch=x64 --icon=./assets/favicon.ico --prune=true --out=dist"
+    "buildWinD": "cross-env NODE_ENV=development electron-packager . slpb --platform=win32 --arch=x64 --icon=./assets/favicon.ico --prune=true --out=dist",
+    "test1": "cross-env NODE_ENV=production node -e \"console.log(process.env.NODE_ENV)\""
   },
   "build": {
-    "appId": "com.asqdanil.slpb"
+    "appId": "com.asqdanil.slpb",
+    "win": {
+           "target": "squirrel"
+    }
   },
   "author": "AsQ (Danila)",
   "license": "ISC",
