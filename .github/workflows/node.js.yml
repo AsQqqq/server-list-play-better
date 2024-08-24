@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - master
+    tags:
+      - 'v*.*.*'
+      - 'v*.*.*-*'
   workflow_dispatch:
 
 jobs:
@@ -47,7 +50,7 @@ jobs:
         run: |
           mkdir -p zip_temp
           cp -r ./dist/slpb-win32-x64/* zip_temp/
-          zip -r ServerListPlayBetter.zip zip_temp/
+          zip -r ServerListPlayBetter.zip zip_temp/*
 
       - name: Upload build artifact (zip)
         uses: actions/upload-artifact@v3
@@ -81,8 +84,8 @@ jobs:
         with:
           tag_name: v${{ github.sha }}
           release_name: Release v${{ github.sha }}
-          draft: false
-          prerelease: false
+          draft: true
+          prerelease: true
 
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1

@@ -1,6 +1,6 @@
 {
   "name": "slpb",
-  "version": "0.0.5-beta",
+  "version": "0.0.6-beta",
   "server_version": "0.0.2-beta",
   "date": "2024-08-24",
   "description": "Список серверов Counter Strike 2",
@@ -14,8 +14,18 @@
   "build": {
     "appId": "com.asqdanil.slpb",
     "win": {
-           "target": "squirrel"
+      "target": "squirrel"
+    },
+    "publish": [
+    {
+      "provider": "github",
+      "owner": "AsQqqq",
+      "repo": "server-list-play-better"
     }
+  ],
+  "files": [
+    "**/*"
+  ]
   },
   "author": "AsQ (Danila)",
   "license": "ISC",
