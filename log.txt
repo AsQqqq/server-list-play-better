@@ -1,0 +1,17 @@
+[2024-08-24 15:49:43.948] [info]  Logging to file: C:\Users\Danila\Documents\client_server_list\log.txt
+[2024-08-24 15:49:43.958] [info]  update-electron-app config looks good; aborting updates since app is in development mode
+[2024-08-24 15:49:43.995] [info]  App ready, creating window
+[2024-08-24 15:49:43.997] [info]  Creating main application window
+[2024-08-24 15:49:44.054] [info]  Loading design page
+[2024-08-24 15:49:44.359] [info]  Main window loaded
+[2024-08-24 15:49:48.000] [info]  Window closed
+[2024-08-24 15:49:48.020] [info]  All windows closed, quitting app
+[2024-08-24 15:58:32.664] [info]  Logging to file: C:\Users\Danila\Documents\client_server_list\log.txt
+[2024-08-24 15:58:32.677] [info]  update-electron-app config looks good; aborting updates since app is in development mode
+[2024-08-24 15:58:32.679] [info]  NODE_ENV: production
+[2024-08-24 15:58:32.722] [info]  App ready, creating window
+[2024-08-24 15:58:32.723] [info]  Creating main application window
+[2024-08-24 15:58:32.790] [info]  Loading design page
+[2024-08-24 15:58:33.082] [info]  Main window loaded
+[2024-08-24 15:58:44.141] [info]  Window closed
+[2024-08-24 15:58:44.156] [info]  All windows closed, quitting app
