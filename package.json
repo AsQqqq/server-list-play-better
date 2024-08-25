@@ -12,7 +12,8 @@
     "create-latest-yml": "node createLatestYml.js",
     "create-latest-json": "node createLatestJson.js",
     "dist": "npm run buildWinP && npm run create-latest-yml",
-    "generate-blockmap": "node generateBlockmap.js"
+    "generate-blockmap": "node generateBlockmap.js",
+    "generate-checksum": "node generateChecksum.js"
   },
   "build": {
     "appId": "com.asqdanil.slpb",
