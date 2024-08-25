@@ -9,14 +9,6 @@ const fs = require('fs');
 const src = path.join(__dirname, 'app-update.yml');
 const dest = path.join(__dirname, '..', 'app-update.yml');
 
-fs.copyFile(src, dest, (err) => {
-  if (err) {
-    logEvent('Error copying app-update.yml:', err);
-  } else {
-    logEvent('app-update.yml successfully copied to', dest);
-  }
-});
-
 // Задание переменных среды для тестирования
 process.env.REPO_OWNER = 'AsQqqq';
 process.env.REPO_NAME = 'server-list-play-better';
@@ -27,6 +19,20 @@ log.transports.file.level = 'debug';
 log.transports.file.format = '[{y}-{m}-{d} {h}:{i}:{s}.{ms}] [{level}] {text}';
 log.transports.console.level = 'debug';
 log.transports.console.format = '[{y}-{m}-{d} {h}:{i}:{s}.{ms}] [{level}] {text}';
+
+// Логирование событий
+function logEvent(message) {
+    console.log(message);
+    log.info(message);
+}
+
+fs.copyFile(src, dest, (err) => {
+  if (err) {
+    logEvent('Error copying app-update.yml:', err);
+  } else {
+    logEvent('app-update.yml successfully copied to', dest);
+  }
+});
 
 // Проверка, установлены ли переменные среды
 if (!process.env.REPO_OWNER || !process.env.REPO_NAME) {
@@ -39,11 +45,6 @@ const server = 'https://update.electronjs.org';
 const feed = `${server}/${process.env.REPO_OWNER}/${process.env.REPO_NAME}/${process.platform}-${process.arch}/${app.getVersion()}`;
 log.info(`URL для обновлений: ${feed}`);
 
-// Логирование событий
-function logEvent(message) {
-    console.log(message);
-    log.info(message);
-}
 
 // Установка NODE_ENV по умолчанию
 if (!process.env.NODE_ENV) {
