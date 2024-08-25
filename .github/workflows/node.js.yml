@@ -18,6 +18,11 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        
+      - name: Debug npm scripts
+        run: |
+          echo "Executing npm run create-latest-json"
+          npm run create-latest-json
 
       - name: Install Wine
         run: sudo dpkg --add-architecture i386 && sudo apt update && sudo apt install -y wine64 wine32
