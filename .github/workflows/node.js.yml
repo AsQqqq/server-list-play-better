@@ -81,14 +81,14 @@ jobs:
 
       - name: Archivate program files
         run: |
-          cd ./slpb--win32-x64 && zip -r ../slpb--win32-x64.zip ./*
+          cd ./slpb-win32-x64 && zip -r ../slpb-win32-x64.zip ./*
 
       - name: Upload build artifact (release-files)
         uses: actions/upload-artifact@v3
         with:
           name: release-files
           path: |
-            slpb--win32-x64.zip
+            slpb-win32-x64.zip
             latest.yml
             LICENSE
             README.md
