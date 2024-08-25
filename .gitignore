@@ -9,6 +9,7 @@
 *.pyc
 *.sln
 gitcommand.txt
+app-update.yml
 *.swp
 *.VC.db
 *.VC.VC.opendb
