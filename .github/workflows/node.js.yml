@@ -57,7 +57,7 @@ jobs:
         run: |
           cp LICENSE ./dist/
           cp README.md ./dist/
-      
+
       - name: List files in dist directory
         run: ls -la ./dist
 
@@ -66,13 +66,13 @@ jobs:
 
       - name: Move all required files to release directory
         run: |
-          mv ./dist/your-app-*.dmg ./dist/release-files/
-          mv ./dist/your-app-*.exe ./dist/release-files/
-          mv ./dist/your-app-*.AppImage ./dist/release-files/
+          if [ -f ./dist/your-app-*.dmg ]; then mv ./dist/your-app-*.dmg ./dist/release-files/; fi
+          if [ -f ./dist/your-app-*.exe ]; then mv ./dist/your-app-*.exe ./dist/release-files/; fi
+          if [ -f ./dist/your-app-*.AppImage ]; then mv ./dist/your-app-*.AppImage ./dist/release-files/; fi
           mv ./dist/latest.yml ./dist/release-files/
           mv ./dist/latest.json ./dist/release-files/
-          mv ./dist/your-app-*.blockmap ./dist/release-files/
-          mv ./dist/your-app-*.sha256 ./dist/release-files/
+          if [ -f ./dist/your-app-*.blockmap ]; then mv ./dist/your-app-*.blockmap ./dist/release-files/; fi
+          if [ -f ./dist/your-app-*.sha256 ]; then mv ./dist/your-app-*.sha256 ./dist/release-files/; fi
           mv ./dist/LICENSE ./dist/release-files/
           mv ./dist/README.md ./dist/release-files/
 
