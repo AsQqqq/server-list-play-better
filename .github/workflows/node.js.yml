@@ -21,34 +21,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-
-      - name: Install Wine
-        run: |
-          sudo dpkg --add-architecture i386
-          sudo apt-get update
-          sudo apt-get install -y wine64 wine32
-
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-
       - name: Install dependencies
         run: npm install
 
-      - name: Build project
-        run: npm run buildWinP
-
-      - name: Package application
+      - name: Build application
         run: npm run dist
 
+      - name: Create latest.yml
+        run: node createLatestYml.js
+
       - name: List files in dist directory
-        run: |
-          ls -la ./dist
-          ls ./dist
-          ls -la ./dist/slpb-win32-x64
+        run: ls -la ./dist
 
       - name: Create zip archive with exe
         run: |
@@ -94,7 +77,7 @@ jobs:
 
       - name: Extract Version from Tag
         id: extract_version
-        run: echo "##[set-output name=VERSION;]$(echo ${GITHUB_REF##*/})"
+        run: echo "VERSION=$(echo ${GITHUB_REF##*/})" >> $GITHUB_ENV
 
       - name: Create Release
         id: create_release
@@ -126,8 +109,3 @@ jobs:
           asset_path: ./artifacts/latest.yml
           asset_name: latest.yml
           asset_content_type: text/yaml
-
-permissions:
-  id-token: write
-  checks: write
-  contents: write
