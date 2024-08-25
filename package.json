@@ -10,6 +10,7 @@
     "buildWinP": "cross-env NODE_ENV=production electron-packager . slpb --platform=win32 --arch=x64 --icon=./assets/favicon.ico --prune=true --out=dist",
     "buildWinD": "cross-env NODE_ENV=development electron-packager . slpb --platform=win32 --arch=x64 --icon=./assets/favicon.ico --prune=true --out=dist",
     "create-latest-yml": "node createLatestYml.js",
+    "create-latest-json": "node createLatestJson.js",
     "dist": "npm run buildWinP && npm run create-latest-yml"
   },
   "build": {
