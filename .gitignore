@@ -10,6 +10,7 @@
 *.sln
 gitcommand.txt
 app-update.yml
+log.txt
 *.swp
 *.VC.db
 *.VC.VC.opendb

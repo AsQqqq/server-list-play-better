@@ -26,20 +26,30 @@ const req = https.request(options, (res) => {
   res.on('end', () => {
     const release = JSON.parse(data);
     const version = release.tag_name;
-    const url = release.assets.find(asset => asset.name.endsWith('.zip')).browser_download_url;
+    const asset = release.assets.find(asset => asset.name.endsWith('.zip'));
+    if (!asset) {
+      console.error('No .zip asset found in the latest release.');
+      return;
+    }
+    const url = asset.browser_download_url;
 
     const latestYmlContent = `
 version: ${version}
 url: ${url}
 `;
 
-    fs.writeFileSync(path.join(__dirname, 'dist', 'latest.yml'), latestYmlContent);
+    const distPath = path.join(__dirname, 'dist');
+    if (!fs.existsSync(distPath)) {
+      fs.mkdirSync(distPath);
+    }
+
+    fs.writeFileSync(path.join(distPath, 'latest.yml'), latestYmlContent);
     console.log('latest.yml created successfully!');
   });
 });
 
 req.on('error', (e) => {
-  console.error(e);
+  console.error(`Problem with request: ${e.message}`);
 });
 
 req.end();

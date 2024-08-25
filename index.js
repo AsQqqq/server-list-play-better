@@ -1,58 +1,86 @@
 const path = require('path');
-const url = require('url');
 const { app, BrowserWindow, ipcMain } = require('electron');
 const packageJson = require('./package.json');
 const { updateElectronApp } = require('update-electron-app');
 const { autoUpdater } = require('electron-updater');
 const log = require('electron-log');
+const fs = require('fs');
 
-// Настройка логов
-const logPath = path.join(__dirname, 'log.txt');
-log.transports.file.resolvePath = () => logPath;
+const src = path.join(__dirname, 'app-update.yml');
+const dest = path.join(__dirname, '..', 'app-update.yml');
+
+fs.copyFile(src, dest, (err) => {
+  if (err) {
+    logEvent('Error copying app-update.yml:', err);
+  } else {
+    logEvent('app-update.yml successfully copied to', dest);
+  }
+});
+
+// Задание переменных среды для тестирования
+process.env.REPO_OWNER = 'AsQqqq';
+process.env.REPO_NAME = 'server-list-play-better';
+
+// Настройка логирования
+log.transports.file.resolvePath = () => path.join(__dirname, 'log.txt');
 log.transports.file.level = 'debug';
 log.transports.file.format = '[{y}-{m}-{d} {h}:{i}:{s}.{ms}] [{level}] {text}';
-
 log.transports.console.level = 'debug';
 log.transports.console.format = '[{y}-{m}-{d} {h}:{i}:{s}.{ms}] [{level}] {text}';
 
+// Проверка, установлены ли переменные среды
+if (!process.env.REPO_OWNER || !process.env.REPO_NAME) {
+    log.error('REPO_OWNER или REPO_NAME переменные среды не установлены.');
+    app.quit();
+}
+
+// Установка URL для обновлений
 const server = 'https://update.electronjs.org';
 const feed = `${server}/${process.env.REPO_OWNER}/${process.env.REPO_NAME}/${process.platform}-${process.arch}/${app.getVersion()}`;
+log.info(`URL для обновлений: ${feed}`);
 
-log.info(`Logging to file: ${logPath}`);
-
+// Логирование событий
 function logEvent(message) {
     console.log(message);
     log.info(message);
 }
 
-logEvent(`Feed url: ${feed}`);
-
-if (process.env.NODE_ENV === undefined) {
+// Установка NODE_ENV по умолчанию
+if (!process.env.NODE_ENV) {
     process.env.NODE_ENV = 'production';
 }
 logEvent(`NODE_ENV: ${process.env.NODE_ENV}`);
 
+// Настройка автообновления
 if (process.env.NODE_ENV === 'production') {
     updateElectronApp({
-        repo: 'AsQqqq/server-list-play-better',
+        repo: `${process.env.REPO_OWNER}/${process.env.REPO_NAME}`,
         updateInterval: '1 hour',
         logger: log
     });
 } else {
-    logEvent('App is in development mode; skipping update checks.');
+    logEvent('Программа в режиме разработки; пропуск проверки обновлений.');
 }
 
-autoUpdater.on('update-available', (info) => {
-    logEvent(`Update available: version ${info.version}`);
+// Обработка ошибок автообновления
+autoUpdater.on('error', (error) => {
+    logEvent(`Ошибка обновления: ${error}`);
 });
 
+// Обработка события доступности обновления
+autoUpdater.on('update-available', (info) => {
+    logEvent(`Доступно обновление: версия ${info.version}`);
+});
+
+// Обработка события загрузки обновления
 autoUpdater.on('update-downloaded', (info) => {
-    logEvent('Update downloaded, installing...');
+    logEvent('Обновление загружено, установка...');
     autoUpdater.quitAndInstall();
 });
 
+// Создание главного окна приложения
 function createWindow() {
-    logEvent('Creating main application window');
+    logEvent('Создание главного окна приложения');
     const win = new BrowserWindow({
         width: 800,
         height: 600,
@@ -70,7 +98,7 @@ function createWindow() {
     });
 
     win.webContents.on('did-finish-load', () => {
-        logEvent('Main window loaded');
+        logEvent('Главное окно загружено');
         win.webContents.send('app-info', {
             version: packageJson.version,
             server_version: packageJson.server_version,
@@ -79,54 +107,54 @@ function createWindow() {
     });
 
     ipcMain.on('minimize-window', () => {
-        logEvent('Window minimized');
+        logEvent('Окно свернуто');
         win.minimize();
     });
 
     ipcMain.on('maximize-window', () => {
         if (!win.isMaximized()) {
-            logEvent('Window maximized');
+            logEvent('Окно развернуто');
             win.maximize();
         } else {
-            logEvent('Window unmaximized from maximized state');
+            logEvent('Окно свернуто с развернутого состояния');
             win.unmaximize();
         }
     });
 
     ipcMain.on('get-state-window', (event) => {
-        logEvent('Window state request');
+        logEvent('Запрос состояния окна');
         event.returnValue = {
             isMaximized: win.isMaximized()
         };
     });
 
     ipcMain.on('close-window', () => {
-        logEvent('Window closed');
+        logEvent('Окно закрыто');
         win.close();
     });
 
-    logEvent('Loading design page');
+    logEvent('Загрузка страницы дизайна');
     win.loadFile('design/index.html');
 }
 
 app.whenReady().then(() => {
-    logEvent('App ready, creating window');
+    logEvent('Приложение готово, создание окна');
     createWindow();
 
-    // Инициализация автообновления здесь
+    // Инициализация автообновления
     autoUpdater.checkForUpdatesAndNotify();
 });
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
-        logEvent('All windows closed, quitting app');
+        logEvent('Все окна закрыты, выход из приложения');
         app.quit();
     }
 });
 
 app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
-        logEvent('App activated, creating new window');
+        logEvent('Приложение активировано, создание нового окна');
         createWindow();
     }
 });
