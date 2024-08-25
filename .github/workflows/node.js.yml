@@ -77,16 +77,20 @@ jobs:
           mkdir -p artifacts
           mv ServerListPlayBetter.zip ./artifacts/
 
+      - name: Extract Version from Tag
+        id: extract_version
+        run: echo "##[set-output name=VERSION;]$(echo ${GITHUB_REF##*/})"
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref_name  }}
-          release_name: Release ${{ github.ref_name  }}
+          tag_name: ${{ steps.extract_version.outputs.VERSION }}
+          release_name: ${{ steps.extract_version.outputs.VERSION }}
           draft: false
-          prerelease: false
+          prerelease: false # укажите false, если версия не пред-релизная
 
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
@@ -97,3 +101,8 @@ jobs:
           asset_path: ./artifacts/ServerListPlayBetter.zip
           asset_name: ServerListPlayBetter.zip
           asset_content_type: application/zip
+
+permissions:
+  id-token: write
+  checks: write
+  contents: write
