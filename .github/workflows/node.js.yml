@@ -53,36 +53,20 @@ jobs:
       - name: Generate checksum
         run: npm run generate-checksum
 
-      - name: Copy LICENSE and README
-        run: |
-          cp LICENSE ./dist/
-          cp README.md ./dist/
-
-      - name: List files in dist directory
-        run: ls -la ./dist
-
+        
       - name: Create a new directory for release files
         run: mkdir -p ./dist/release-files
-
-      - name: Move all required files to release directory
-        run: |
-          if [ -f ./dist/your-app-*.dmg ]; then mv ./dist/your-app-*.dmg ./dist/release-files/; fi
-          if [ -f ./dist/your-app-*.exe ]; then mv ./dist/your-app-*.exe ./dist/release-files/; fi
-          if [ -f ./dist/your-app-*.AppImage ]; then mv ./dist/your-app-*.AppImage ./dist/release-files/; fi
-          mv ./dist/latest.yml ./dist/release-files/
-          mv ./dist/latest.json ./dist/release-files/
-          if [ -f ./dist/your-app-*.blockmap ]; then mv ./dist/your-app-*.blockmap ./dist/release-files/; fi
-          if [ -f ./dist/your-app-*.sha256 ]; then mv ./dist/your-app-*.sha256 ./dist/release-files/; fi
-          mv ./dist/LICENSE ./dist/release-files/
-          mv ./dist/README.md ./dist/release-files/
-
-      # - name: Archivate release files
-      #   run: zip -r release-files.zip ./dist/release-files
-
+        
       - name: Archivate program files
         run: |
-          cd ./slpb-win32-x64 && zip -r ../slpb-win32-x64.zip ./*
-
+          cd ./dist/slpb-win32-x64 && zip -r ../../slpb-win32-x64.zip ./*
+        
+      - name: List files in dist directory
+        run: ls -la ./dist
+        
+      - name: List files in . directory
+        run: ls
+        
       - name: Upload build artifact (release-files)
         uses: actions/upload-artifact@v3
         with:
