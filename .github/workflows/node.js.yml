@@ -45,6 +45,7 @@ jobs:
         run: |
           ls -la ./dist
           ls ./dist
+          ls -la ./dist/slpb-win32-x64
 
       - name: Create zip archive with exe
         run: |
@@ -82,8 +83,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          tag_name: ${{ github.ref_name  }}
+          release_name: Release ${{ github.ref_name  }}
           draft: false
           prerelease: false
 

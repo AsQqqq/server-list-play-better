@@ -15,6 +15,9 @@ log.transports.file.format = '[{y}-{m}-{d} {h}:{i}:{s}.{ms}] [{level}] {text}';
 log.transports.console.level = 'debug';
 log.transports.console.format = '[{y}-{m}-{d} {h}:{i}:{s}.{ms}] [{level}] {text}';
 
+const server = 'https://update.electronjs.org';
+const feed = `${server}/${process.env.REPO_OWNER}/${process.env.REPO_NAME}/${process.platform}-${process.arch}/${app.getVersion()}`;
+
 log.info(`Logging to file: ${logPath}`);
 
 function logEvent(message) {
@@ -22,10 +25,12 @@ function logEvent(message) {
     log.info(message);
 }
 
-logEvent(`NODE_ENV: ${process.env.NODE_ENV}`);
+logEvent(`Feed url: ${feed}`);
+
 if (process.env.NODE_ENV === undefined) {
     process.env.NODE_ENV = 'production';
 }
+logEvent(`NODE_ENV: ${process.env.NODE_ENV}`);
 
 if (process.env.NODE_ENV === 'production') {
     updateElectronApp({

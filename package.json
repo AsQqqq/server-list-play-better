@@ -1,7 +1,7 @@
 {
   "name": "slpb",
-  "version": "0.0.9-beta",
-  "server_version": "0.0.2-beta",
+  "version": "0.0.3-beta",
+  "server_version": "0.1.0-beta",
   "date": "2024-08-24",
   "description": "Список серверов Counter Strike 2",
   "main": "index.js",
@@ -20,7 +20,8 @@
     {
       "provider": "github",
       "owner": "AsQqqq",
-      "repo": "server-list-play-better"
+      "repo": "server-list-play-better",
+      "releaseType": "release"
     }
   ],
   "files": [
