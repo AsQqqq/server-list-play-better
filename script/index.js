@@ -64,12 +64,10 @@ function fetchAndUpdateContent(url) {
 }
 
 function updateServerCards(currentServers, data, contentElement) {
-    // Работаем с текущими серверами и новыми данными
-    // Находим новые и удаляем старые серверы
-
     const newServers = new Map(Object.entries(data));
     const serversToRemove = [];
 
+    // Поиск серверов для удаления
     currentServers.forEach((value, key) => {
         if (!newServers.has(key)) {
             serversToRemove.push(key);
@@ -87,24 +85,41 @@ function updateServerCards(currentServers, data, contentElement) {
         }
     });
 
-    // Добавление и обновление новых серверов
-    for (const [port, serverInfo] of newServers.entries()) {
-        if (!currentServers.has(port)) {
+    // Добавление новых и обновление существующих серверов
+    newServers.forEach((serverInfo, port) => {
+        const existingBlock = document.querySelector(`.block[data-port="${port}"]`);
+
+        const pingMs = String(Math.floor(parseFloat(serverInfo.ping) * 1000));
+
+        let pingClass = '';
+        if (parseInt(pingMs) > 80) {
+            pingClass = 'ping-red';
+        } else if (parseInt(pingMs) > 50) {
+            pingClass = 'ping-yellow';
+        } else {
+            pingClass = 'ping-green';
+        }
+
+        if (existingBlock) {
+            // Обновление существующего блока сервера
+            const pingElement = existingBlock.querySelector('.ping');
+            const peopleElement = existingBlock.querySelector('.people');
+
+            if (pingElement) {
+                pingElement.textContent = pingMs;
+                pingElement.className = `ping title-text ${pingClass}`;
+            }
+
+            if (peopleElement) {
+                peopleElement.textContent = `${serverInfo.now_players}/${serverInfo.max_players}`;
+            }
+        } else {
+            // Добавление нового блока сервера
             const serverBlock = document.createElement('div');
             serverBlock.className = 'block invisible';
             serverBlock.setAttribute('data-port', port);
 
             const imageUrl = `../image/${serverInfo.map}.png`;
-            const pingMs = String(Math.floor(parseFloat(serverInfo.ping) * 1000));
-
-            let pingClass = '';
-            if (parseInt(pingMs) > 80) {
-                pingClass = 'ping-red';
-            } else if (parseInt(pingMs) > 50) {
-                pingClass = 'ping-yellow';
-            } else {
-                pingClass = 'ping-green';
-            }
 
             serverBlock.innerHTML = `
                 <div class="image" style="background-image: 
@@ -124,17 +139,15 @@ function updateServerCards(currentServers, data, contentElement) {
                 <div class="map title-text">${serverInfo.map}</div>
             `;
             contentElement.appendChild(serverBlock);
-            
+
             setTimeout(() => {
                 serverBlock.classList.remove('invisible');
                 serverBlock.classList.add('visible');
             }, 50);
 
             currentServers.set(port, serverInfo);
-        } else {
-            currentServers.set(port, serverInfo);
         }
-    }
+    });
 }
 
 function join_to_server(connectServer) {
