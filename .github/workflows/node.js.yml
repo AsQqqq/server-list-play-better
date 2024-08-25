@@ -29,28 +29,48 @@ jobs:
         run: npm run dist
 
       - name: Create latest.yml
-        run: node createLatestYml.js
+        run: npm run create-latest-yml
 
+      - name: Create latest.json
+        run: npm run create-latest-json
+
+      - name: Generate blockmap
+        run: npm run generate-blockmap
+
+      - name: Generate checksum
+        run: npm run generate-checksum
+
+      - name: Copy LICENSE and README
+        run: |
+          cp LICENSE ./dist/
+          cp README.md ./dist/
+      
       - name: List files in dist directory
         run: ls -la ./dist
 
-      - name: Create zip archive with exe
+      - name: Create a new directory for release files
+        run: mkdir -p ./dist/release-files
+
+      - name: Move all required files to release directory
         run: |
-          mkdir -p zip_temp
-          cp -r ./dist/slpb-win32-x64/* zip_temp/
-          zip -r ServerListPlayBetter.zip zip_temp/*
+          mv ./dist/your-app-*.dmg ./dist/release-files/
+          mv ./dist/your-app-*.exe ./dist/release-files/
+          mv ./dist/your-app-*.AppImage ./dist/release-files/
+          mv ./dist/latest.yml ./dist/release-files/
+          mv ./dist/latest.json ./dist/release-files/
+          mv ./dist/your-app-*.blockmap ./dist/release-files/
+          mv ./dist/your-app-*.sha256 ./dist/release-files/
+          mv ./dist/LICENSE ./dist/release-files/
+          mv ./dist/README.md ./dist/release-files/
 
-      - name: Upload build artifact (zip)
+      - name: Archivate release files
+        run: zip -r release-files.zip ./dist/release-files
+
+      - name: Upload build artifact (release-files)
         uses: actions/upload-artifact@v3
         with:
-          name: ServerListPlayBetter
-          path: ServerListPlayBetter.zip
-
-      - name: Upload latest.yml artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: latest-yml
-          path: ./dist/latest.yml
+          name: release-files
+          path: release-files.zip
 
   release:
     needs: build
@@ -60,21 +80,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Download zip artifact
+      - name: Download release files artifact
         uses: actions/download-artifact@v3
         with:
-          name: ServerListPlayBetter
-
-      - name: Download latest.yml artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: latest-yml
-
-      - name: Move downloaded artifacts
-        run: |
-          mkdir -p artifacts
-          mv ServerListPlayBetter.zip ./artifacts/
-          mv latest.yml ./artifacts/
+          name: release-files
 
       - name: Extract Version from Tag
         id: extract_version
@@ -91,22 +100,12 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Upload Release Asset (zip)
+      - name: Upload Release Assets
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./artifacts/ServerListPlayBetter.zip
-          asset_name: ServerListPlayBetter.zip
+          asset_path: release-files.zip
+          asset_name: release-files.zip
           asset_content_type: application/zip
-
-      - name: Upload Release Asset (latest.yml)
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./artifacts/latest.yml
-          asset_name: latest.yml
-          asset_content_type: text/yaml

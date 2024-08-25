@@ -1,8 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
+const crypto = require('crypto');
 
-// Замените эти переменные на ваши
 const owner = 'AsQqqq';
 const repo = 'server-list-play-better';
 
@@ -23,7 +23,7 @@ const req = https.request(options, (res) => {
     data += chunk;
   });
 
-  res.on('end', () => {
+  res.on('end', async () => {
     const release = JSON.parse(data);
     const version = release.tag_name;
     const asset = release.assets.find(asset => asset.name.endsWith('.zip'));
@@ -33,10 +33,12 @@ const req = https.request(options, (res) => {
     }
     const url = asset.browser_download_url;
 
+    const hash = await getSha512Hash(url);
+
     const latestYmlContent = `
 version: ${version}
-url: ${url}
-`;
+path: ${url}
+sha512: ${hash}`;
 
     const distPath = path.join(__dirname, 'dist');
     if (!fs.existsSync(distPath)) {
@@ -53,3 +55,19 @@ req.on('error', (e) => {
 });
 
 req.end();
+
+function getSha512Hash(fileUrl) {
+  return new Promise((resolve, reject) => {
+    https.get(fileUrl, (res) => {
+      const hash = crypto.createHash('sha512');
+      res.on('data', (chunk) => {
+        hash.update(chunk);
+      });
+      res.on('end', () => {
+        resolve(hash.digest('hex'));
+      });
+    }).on('error', (e) => {
+      reject(`Failed to download or hash file: ${e.message}`);
+    });
+  });
+}
