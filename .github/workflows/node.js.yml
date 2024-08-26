@@ -84,35 +84,85 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
-      - name: Download release files artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: release-files
+    - name: Download release files artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: release-files
 
-      - name: Extract Version from Tag
-        id: extract_version
-        run: echo "VERSION=$(echo ${GITHUB_REF##*/})" >> $GITHUB_ENV
+    - name: Extract Version from Tag
+      id: extract_version
+      run: echo "VERSION=$(echo ${GITHUB_REF##*/})" >> $GITHUB_ENV
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ env.VERSION }}
-          release_name: ${{ env.VERSION }}
-          draft: true
-          prerelease: false
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ env.VERSION }}
+        release_name: ${{ env.VERSION }}
+        draft: true
+        prerelease: false
 
-      - name: Upload Release Assets
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: release-files.zip
-          asset_name: release-files.zip
-          asset_content_type: application/zip
+    - name: Upload Release Assets (Individual Files)
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: slpb-win32-x64.zip
+        asset_name: slpb-win32-x64.zip
+        asset_content_type: application/zip
+
+    - name: Upload Release Assets (latest.yml)
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: latest.yml
+        asset_name: latest.yml
+        asset_content_type: text/yaml
+
+    - name: Upload Release Assets (LICENSE)
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: LICENSE
+        asset_name: LICENSE
+        asset_content_type: text/plain
+
+    - name: Upload Release Assets (README.md)
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: README.md
+        asset_name: README.md
+        asset_content_type: text/markdown
+
+    - name: Upload Release Assets (latest.json)
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: latest.json
+        asset_name: latest.json
+        asset_content_type: application/json
+
+    - name: Upload Release Assets (slpb.blockmap)
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: slpb.blockmap
+        asset_name: slpb.blockmap
+        asset_content_type: application/octet-stream
