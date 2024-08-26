@@ -36,8 +36,13 @@ jobs:
       - name: Build application
         run: npm run dist
 
+      - name: Set VERSION environment variable
+        run: echo "VERSION=$(git describe --tags)" >> $GITHUB_ENV
+
       - name: Create latest.yml
-        run: npm run create-latest-yml -- ${{ env.VERSION }}
+        run: npm run create-latest-yml
+        env:
+          VERSION: ${{ env.VERSION }}
 
       - name: Create latest.json
         run: npm run create-latest-json
