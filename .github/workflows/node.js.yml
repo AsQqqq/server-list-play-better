@@ -138,7 +138,7 @@ jobs:
       run: |
         VERSION=${GITHUB_REF##*/}
         echo "version: 'v${VERSION}'" > latest.yml
-        download_url=$(gh release download ${{ env.VERSION }} --name "slpb-win32-x64.zip" --json  url --jq .url)
+        download_url=$(gh release view $VERSION --json assets | jq -r '.assets[] | select(.name == "slpb-win32-x64.zip").url')
         echo "path: '${download_url}'" >> latest.yml
         echo "sha512: '${{ steps.calculate-sha.outputs.sha512 }}'" >> latest.yml
         echo "releaseDate: '$(date -u +"%Y-%m-%dT%H:%M:%SZ")'" >> latest.yml
