@@ -45,7 +45,6 @@ jobs:
 
       - name: Create latest.yml
         run: |
-          VERSION=${GITHUB_REF/refs\/tags\//}
           echo "version: '${{ env.VERSION }}'" > latest.yml
           echo "path: 'dist/your-app.zip'" >> latest.yml
           echo "sha512: '${{ steps.calculate-sha.outputs.sha512 }}'" >> latest.yml
@@ -88,7 +87,7 @@ jobs:
       - name: Move files to release directory
         run: |
           mv ./dist/latest.yml ./dist/release-files/ && echo "latest.yml moved successfully" || echo "Failed to move latest.yml"
-          mv ./dist/latest.json ./dist/release-files/ && echo "latest.json moved successfully" || echo "Failed to move latest.json"
+          mv ./latest.json ./dist/release-files/ && echo "latest.json moved successfully" || echo "Failed to move latest.json"
           mv ./slpb-win32-x64.zip ./dist/release-files/ && echo "slpb-win32-x64.zip moved successfully" || echo "Failed to move slpb-win32-x64.zip"
           mv ./dist/slpb.blockmap ./dist/release-files/ && echo "slpb.blockmap moved successfully" || echo "Failed to move slpb.blockmap"
           mv ./LICENSE ./dist/release-files/ && echo "LICENSE moved successfully" || echo "Failed to move LICENSE"
