@@ -30,11 +30,6 @@ jobs:
       - name: Create dist directory
         run: mkdir -p ./dist
 
-      - name: Debug npm scripts
-        run: |
-          echo "Executing npm run create-latest-json"
-          npm run create-latest-json
-
       - name: Install Wine
         run: sudo dpkg --add-architecture i386 && sudo apt update && sudo apt install -y wine64 wine32
 
@@ -55,29 +50,29 @@ jobs:
 
       - name: Create a new directory for release files
         run: mkdir -p ./dist/release-files
-        
+
       - name: Archivate program files
         run: |
           cd ./dist/slpb-win32-x64 && zip -r ../../slpb-win32-x64.zip ./*
-        
+
       - name: List files in dist directory (Debug)
         run: ls -la ./dist
-        
+
       - name: List files in root directory (Debug)
         run: ls -la
-        
+
       - name: Move files to release directory
         run: |
-          mv slpb-win32-x64.zip ./dist/release-files/
-          mv latest.yml ./dist/release-files/
-          mv latest.json ./dist/release-files/
-          mv slpb.blockmap ./dist/release-files/
-          mv LICENSE ./dist/release-files/
-          mv README.md ./dist/release-files/
+          mv ./dist/latest.yml ./dist/release-files/ && echo "latest.yml moved successfully" || echo "Failed to move latest.yml"
+          mv ./dist/latest.json ./dist/release-files/ && echo "latest.json moved successfully" || echo "Failed to move latest.json"
+          mv ./slpb-win32-x64.zip ./dist/release-files/ && echo "slpb-win32-x64.zip moved successfully" || echo "Failed to move slpb-win32-x64.zip"
+          mv ./dist/slpb.blockmap ./dist/release-files/ && echo "slpb.blockmap moved successfully" || echo "Failed to move slpb.blockmap"
+          mv ./LICENSE ./dist/release-files/ && echo "LICENSE moved successfully" || echo "Failed to move LICENSE"
+          mv ./README.md ./dist/release-files/ && echo "README.md moved successfully" || echo "Failed to move README.md"
 
       - name: List files in release directory (Debug)
         run: ls -la ./dist/release-files
-        
+
       - name: Upload build artifact (release-files)
         uses: actions/upload-artifact@v3
         with:
