@@ -124,13 +124,6 @@ jobs:
         draft: true
         prerelease: false
 
-    - name: Creating slpb-win32-x64.zip archive
-      run: |
-        echo "File slpb-win32-x64.zip does not exist."
-        echo "Creating slpb-win32-x64.zip archive..."
-        zip -r slpb-win32-x64.zip assets design fonts image index.js latest.json latest.yml package.json preload.js render.js script style
-        echo "Archive slpb-win32-x64.zip created."
-
     - name: Upload Release Assets (Individual Files)
       uses: actions/upload-release-asset@v1
       env:
