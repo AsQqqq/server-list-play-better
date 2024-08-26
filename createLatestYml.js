@@ -1,3 +1,4 @@
+// createLatestYml.js
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
@@ -6,9 +7,17 @@ const crypto = require('crypto');
 const owner = 'AsQqqq';
 const repo = 'server-list-play-better';
 
+// Изменение здесь: Получение версии из окружения или первым аргументом командной строки
+const version = process.env.VERSION || process.argv[2];
+
+if (!version) {
+  console.error('Version is not specified.');
+  process.exit(1);
+}
+
 const options = {
   hostname: 'api.github.com',
-  path: `/repos/${owner}/${repo}/releases/latest`,
+  path: `/repos/${owner}/${repo}/releases/tags/${version}`,
   method: 'GET',
   headers: {
     'User-Agent': 'Node.js script',
@@ -25,10 +34,10 @@ const req = https.request(options, (res) => {
 
   res.on('end', async () => {
     const release = JSON.parse(data);
-    const version = release.tag_name;
+    // const version = release.tag_name;  // Удаляем эту строку
     const asset = release.assets.find(asset => asset.name.endsWith('.zip'));
     if (!asset) {
-      console.error('No .zip asset found in the latest release.');
+      console.error('No .zip asset found in the specified release.');
       return;
     }
     const url = asset.browser_download_url;

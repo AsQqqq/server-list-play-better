@@ -37,7 +37,7 @@ jobs:
         run: npm run dist
 
       - name: Create latest.yml
-        run: npm run create-latest-yml
+        run: npm run create-latest-yml -- ${{ env.VERSION }}
 
       - name: Create latest.json
         run: npm run create-latest-json
