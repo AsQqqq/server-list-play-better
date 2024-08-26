@@ -124,15 +124,12 @@ jobs:
         draft: true
         prerelease: false
 
-    - name: Check if slpb-win32-x64.zip exists
+    - name: Creating slpb-win32-x64.zip archive
       run: |
-        if [ -f "./release-files/slpb-win32-x64.zip" ]; then
-          echo "slpb-win32-x64.zip found."
-          ls -lh ./release-files/slpb-win32-x64.zip
-        else
-          echo "slpb-win32-x64.zip not found."
-          exit 1
-        fi
+        echo "File slpb-win32-x64.zip does not exist."
+        echo "Creating slpb-win32-x64.zip archive..."
+        zip -r slpb-win32-x64.zip assets design fonts image index.js latest.json latest.yml package.json preload.js render.js script style
+        echo "Archive slpb-win32-x64.zip created."
 
     - name: Upload Release Assets (Individual Files)
       uses: actions/upload-release-asset@v1
@@ -140,7 +137,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./release-files/slpb-win32-x64.zip
+        asset_path: ./slpb-win32-x64.zip
         asset_name: slpb-win32-x64.zip
         asset_content_type: application/zip
 
@@ -150,7 +147,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./release-files/latest.yml
+        asset_path: ./latest.yml
         asset_name: latest.yml
         asset_content_type: text/yaml
 
@@ -160,7 +157,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./release-files/LICENSE
+        asset_path: ./LICENSE
         asset_name: LICENSE
         asset_content_type: text/plain
 
@@ -170,7 +167,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./release-files/README.md
+        asset_path: ./README.md
         asset_name: README.md
         asset_content_type: text/markdown
 
@@ -180,7 +177,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./release-files/latest.json
+        asset_path: ./latest.json
         asset_name: latest.json
         asset_content_type: application/json
 
@@ -190,6 +187,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./release-files/slpb.blockmap
+        asset_path: ./slpb.blockmap
         asset_name: slpb.blockmap
         asset_content_type: application/octet-stream
