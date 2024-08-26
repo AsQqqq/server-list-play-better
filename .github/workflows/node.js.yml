@@ -70,9 +70,9 @@ jobs:
       - name: Verify ZIP file creation (Debug)
         run: |
           echo "Checking if the zip file was created..."
-          if [ -f ./dist/slpb-win32-x64.zip ]; then
+          if [ -f ../../slpb-win32-x64.zip ]; then
             echo "ZIP file created successfully at ./dist/slpb-win32-x64.zip"
-            ls -lh ./dist/slpb-win32-x64.zip
+            ls -lh ../../slpb-win32-x64.zip
           else
             echo "Failed to create ZIP file!"
             exit 1
