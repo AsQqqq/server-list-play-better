@@ -51,15 +51,28 @@ jobs:
       - name: Create a new directory for release files
         run: mkdir -p ./dist/release-files
 
+      - name: Verify slpb-win32-x64 directory (Debug)
+        run: |
+          echo "Checking if the slpb-win32-x64 directory exists and listing its contents..."
+          if [ -d "./dist/slpb-win32-x64" ]; then
+            echo "Directory exists:"
+            ls -la ./dist/slpb-win32-x64
+          else
+            echo "Directory does not exist!"
+            exit 1
+          fi
+
       - name: Archivate program files
         run: |
-          cd ./dist/slpb-win32-x64 && zip -r ../../slpb-win32-x64.zip ./*
+          echo "Zipping contents of ./dist/slpb-win32-x64..."
+          cd ./dist/slpb-win32-x64 && zip -r ../../slpb-win32-x64.zip ./* || { echo "Zip creation failed"; exit 1; }
 
       - name: Verify ZIP file creation (Debug)
         run: |
           echo "Checking if the zip file was created..."
           if [ -f ./dist/slpb-win32-x64.zip ]; then
             echo "ZIP file created successfully at ./dist/slpb-win32-x64.zip"
+            ls -lh ./dist/slpb-win32-x64.zip
           else
             echo "Failed to create ZIP file!"
             exit 1
