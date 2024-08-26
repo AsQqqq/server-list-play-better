@@ -55,6 +55,16 @@ jobs:
         run: |
           cd ./dist/slpb-win32-x64 && zip -r ../../slpb-win32-x64.zip ./*
 
+      - name: Verify ZIP file creation (Debug)
+        run: |
+          echo "Checking if the zip file was created..."
+          if [ -f ./dist/slpb-win32-x64.zip ]; then
+            echo "ZIP file created successfully at ./dist/slpb-win32-x64.zip"
+          else
+            echo "Failed to create ZIP file!"
+            exit 1
+          fi
+
       - name: List files in dist directory (Debug)
         run: ls -la ./dist
 
@@ -65,7 +75,7 @@ jobs:
         run: |
           mv ./dist/latest.yml ./dist/release-files/ && echo "latest.yml moved successfully" || echo "Failed to move latest.yml"
           mv ./dist/latest.json ./dist/release-files/ && echo "latest.json moved successfully" || echo "Failed to move latest.json"
-          mv ./slpb-win32-x64.zip ./dist/release-files/ && echo "slpb-win32-x64.zip moved successfully" || echo "Failed to move slpb-win32-x64.zip"
+          mv ./dist/slpb-win32-x64.zip ./dist/release-files/ && echo "slpb-win32-x64.zip moved successfully" || echo "Failed to move slpb-win32-x64.zip"
           mv ./dist/slpb.blockmap ./dist/release-files/ && echo "slpb.blockmap moved successfully" || echo "Failed to move slpb.blockmap"
           mv ./LICENSE ./dist/release-files/ && echo "LICENSE moved successfully" || echo "Failed to move LICENSE"
           mv ./README.md ./dist/release-files/ && echo "README.md moved successfully" || echo "Failed to move README.md"
@@ -92,6 +102,11 @@ jobs:
       with:
         name: release-files
 
+    - name: List downloaded files for debugging
+      run: |
+        echo "Listing files in release-files directory:"
+        ls -al ./release-files
+
     - name: Extract Version from Tag
       id: extract_version
       run: echo "VERSION=$(echo ${GITHUB_REF##*/})" >> $GITHUB_ENV
@@ -106,6 +121,16 @@ jobs:
         release_name: ${{ env.VERSION }}
         draft: true
         prerelease: false
+
+    - name: Check if slpb-win32-x64.zip exists
+      run: |
+        if [ -f "./release-files/slpb-win32-x64.zip" ]; then
+          echo "slpb-win32-x64.zip found."
+          ls -lh ./release-files/slpb-win32-x64.zip
+        else
+          echo "slpb-win32-x64.zip not found."
+          exit 1
+        fi
 
     - name: Upload Release Assets (Individual Files)
       uses: actions/upload-release-asset@v1
