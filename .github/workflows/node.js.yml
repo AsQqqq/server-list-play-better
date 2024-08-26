@@ -107,7 +107,7 @@ jobs:
     - name: List downloaded files for debugging
       run: |
         echo "Listing files in release-files directory:"
-        ls -al ./release-files
+        ls -al
 
     - name: Extract Version from Tag
       id: extract_version
