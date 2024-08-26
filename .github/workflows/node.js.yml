@@ -40,16 +40,6 @@ jobs:
         run: |
           echo ${{ env.VERSION }}
 
-      - name: Set VERSION environment variable
-        run: echo ${{ env.VERSION }} >> $GITHUB_ENV
-
-      - name: Create latest.yml
-        run: |
-          echo "version: '${{ env.VERSION }}'" > latest.yml
-          echo "path: 'dist/your-app.zip'" >> latest.yml
-          echo "sha512: '${{ steps.calculate-sha.outputs.sha512 }}'" >> latest.yml
-          echo "releaseDate: '$(date -u +"%Y-%m-%dT%H:%M:%SZ")'" >> latest.yml
-
       - name: Create latest.json
         run: npm run create-latest-json
 
@@ -86,7 +76,6 @@ jobs:
 
       - name: Move files to release directory
         run: |
-          mv ./latest.yml ./dist/release-files/ && echo "latest.yml moved successfully" || echo "Failed to move latest.yml"
           mv ./dist/latest.json ./dist/release-files/ && echo "latest.json moved successfully" || echo "Failed to move latest.json"
           mv ./slpb-win32-x64.zip ./dist/release-files/ && echo "slpb-win32-x64.zip moved successfully" || echo "Failed to move slpb-win32-x64.zip"
           mv ./dist/slpb.blockmap ./dist/release-files/ && echo "slpb.blockmap moved successfully" || echo "Failed to move slpb.blockmap"
@@ -144,6 +133,15 @@ jobs:
         asset_path: ./slpb-win32-x64.zip
         asset_name: slpb-win32-x64.zip
         asset_content_type: application/zip
+        
+    - name: Create latest.yml
+      run: |
+        VERSION=${GITHUB_REF##*/}
+        echo "version: 'v${VERSION}'" > latest.yml
+        download_url=$(gh release download ${{ env.VERSION }} --name "slpb-win32-x64.zip" --json  url --jq .url)
+        echo "path: '${download_url}'" >> latest.yml
+        echo "sha512: '${{ steps.calculate-sha.outputs.sha512 }}'" >> latest.yml
+        echo "releaseDate: '$(date -u +"%Y-%m-%dT%H:%M:%SZ")'" >> latest.yml
 
     - name: Upload Release Assets (latest.yml)
       uses: actions/upload-release-asset@v1
@@ -175,15 +173,15 @@ jobs:
         asset_name: README.md
         asset_content_type: text/markdown
 
-    - name: Upload Release Assets (latest.json)
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./latest.json
-        asset_name: latest.json
-        asset_content_type: application/json
+    # - name: Upload Release Assets (latest.json)
+    #   uses: actions/upload-release-asset@v1
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #   with:
+    #     upload_url: ${{ steps.create_release.outputs.upload_url }}
+    #     asset_path: ./latest.json
+    #     asset_name: latest.json
+    #     asset_content_type: application/json
 
     - name: Upload Release Assets (slpb.blockmap)
       uses: actions/upload-release-asset@v1
