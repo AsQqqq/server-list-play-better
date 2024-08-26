@@ -33,13 +33,24 @@ const req = https.request(options, (res) => {
   });
 
   res.on('end', async () => {
+    if (res.statusCode !== 200) {
+      console.error(`Failed to get release info, status code: ${res.statusCode}`);
+      return;
+    }
+
     const release = JSON.parse(data);
-    // const version = release.tag_name;  // Удаляем эту строку
+    
+    if (!release || !release.assets) {
+      console.error('No assets found in the specified release.');
+      return;
+    }
+
     const asset = release.assets.find(asset => asset.name.endsWith('.zip'));
     if (!asset) {
       console.error('No .zip asset found in the specified release.');
       return;
     }
+
     const url = asset.browser_download_url;
 
     const hash = await getSha512Hash(url);
