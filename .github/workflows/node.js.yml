@@ -86,8 +86,8 @@ jobs:
 
       - name: Move files to release directory
         run: |
-          mv ./dist/latest.yml ./dist/release-files/ && echo "latest.yml moved successfully" || echo "Failed to move latest.yml"
-          mv ./latest.json ./dist/release-files/ && echo "latest.json moved successfully" || echo "Failed to move latest.json"
+          mv ./latest.yml ./dist/release-files/ && echo "latest.yml moved successfully" || echo "Failed to move latest.yml"
+          mv ./dist/latest.json ./dist/release-files/ && echo "latest.json moved successfully" || echo "Failed to move latest.json"
           mv ./slpb-win32-x64.zip ./dist/release-files/ && echo "slpb-win32-x64.zip moved successfully" || echo "Failed to move slpb-win32-x64.zip"
           mv ./dist/slpb.blockmap ./dist/release-files/ && echo "slpb.blockmap moved successfully" || echo "Failed to move slpb.blockmap"
           mv ./LICENSE ./dist/release-files/ && echo "LICENSE moved successfully" || echo "Failed to move LICENSE"
