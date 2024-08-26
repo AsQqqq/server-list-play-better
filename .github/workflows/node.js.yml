@@ -43,8 +43,13 @@ jobs:
       - name: Set VERSION environment variable
         run: echo ${{ env.VERSION }} >> $GITHUB_ENV
 
-      - name: Create latest.yml
-        run: npm run create-latest-yml -- ${{ env.VERSION }}
+      - name: Create laters.yml
+        run: |
+          VERSION=${GITHUB_REF/refs\/tags\//}
+          echo "version: '${{ env.VERSION }}'" > laters.yml
+          echo "path: 'dist/your-app.zip'" >> laters.yml
+          echo "sha512: '${{ steps.calculate-sha.outputs.sha512 }}'" >> laters.yml
+          echo "releaseDate: '$(date -u +"%Y-%m-%dT%H:%M:%SZ")'" >> laters.yml
 
       - name: Create latest.json
         run: npm run create-latest-json
