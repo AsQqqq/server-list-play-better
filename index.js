@@ -97,7 +97,7 @@ logEvent(`NODE_ENV: ${process.env.NODE_ENV}`);
 if (process.env.NODE_ENV === 'production') {
     updateElectronApp({
         repo: `${process.env.REPO_OWNER}/${process.env.REPO_NAME}`,
-        updateInterval: '2 seconds',
+        updateInterval: '5 minutes',
         logger: log
     });
 } else {
