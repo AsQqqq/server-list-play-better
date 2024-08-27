@@ -4,8 +4,9 @@ const packageJson = require('./package.json');
 const { updateElectronApp } = require('update-electron-app');
 const { autoUpdater } = require('electron-updater');
 const log = require('electron-log');
-const runElevated = require('./elevate');
+const { spawn } = require('child_process');
 const fs = require('fs');
+const extract = require('extract-zip'); // библиотека для распаковки zip архивов
 
 const src = path.join(__dirname, 'app-update.yml');
 const dest = path.join(__dirname, '..', 'app-update.yml');
@@ -18,7 +19,7 @@ process.env.REPO_OWNER = 'AsQqqq';
 process.env.REPO_NAME = 'server-list-play-better';
 
 // Настройка логирования
-log.transports.file.resolvePath = () => path.join(__dirname, 'log.txt');
+log.transports.file.resolvePath = () => path.join(__dirname, 'log.txt'); 
 log.transports.file.level = 'debug';
 log.transports.file.format = '[{y}-{m}-{d} {h}:{i}:{s}.{ms}] [{level}] {text}';
 log.transports.console.level = 'debug';
@@ -30,21 +31,19 @@ function logEvent(message) {
     log.info(message);
 }
 
-
-runElevated(path.join(dest_1), ['--app', path.join(__dirname, 'index.js')], (code) => {
-    if (code !== 0) {
-        logEvent(`Elevate failed with exit code: ${code}`);
-    } else {
-        logEvent('Elevate succeeded');
-    }
-});
-
+// runElevated(path.join(dest_1), ['--app', path.join(__dirname, 'index.js')], (code) => {
+//     if (code !== 0) {
+//         logEvent(`Elevate failed with exit code: ${code}`);
+//     } else {
+//         logEvent('Elevate succeeded');
+//     }
+// });
 
 fs.copyFile(src_1, dest_1, (err) => {
   if (err) {
     logEvent('Error copying elevate.exe:', err);
   } else {
-    logEvent('elevate.exel successfully copied to', dest_1);
+    logEvent('elevate.exe successfully copied to', dest_1);
   }
 });
 fs.copyFile(src, dest, (err) => {
@@ -54,6 +53,27 @@ fs.copyFile(src, dest, (err) => {
     logEvent('app-update.yml successfully copied to', dest);
   }
 });
+
+
+function started_copy_program() {
+    // Путь к вашему bat файлу
+    const batFilePath = path.join(__dirname, 'script.bat');
+
+    // Параметры для запуска bat файла
+    const options = {
+    detached: true,
+    stdio: 'ignore'
+    };
+
+    // Запуск bat файла
+    const bat = spawn('cmd.exe', ['/c', batFilePath], options);
+
+    // Отсоединяем дочерний процесс от родительского
+    bat.unref();
+
+    logEvent('Bat файл запущен и работает независимо от Node.js скрипта');
+}
+
 
 // Проверка, установлены ли переменные среды
 if (!process.env.REPO_OWNER || !process.env.REPO_NAME) {
@@ -65,7 +85,6 @@ if (!process.env.REPO_OWNER || !process.env.REPO_NAME) {
 const server = 'https://update.electronjs.org';
 const feed = `${server}/${process.env.REPO_OWNER}/${process.env.REPO_NAME}/${process.platform}-${process.arch}/${app.getVersion()}`;
 log.info(`URL для обновлений: ${feed}`);
-
 
 // Установка NODE_ENV по умолчанию
 if (!process.env.NODE_ENV) {
@@ -94,16 +113,48 @@ autoUpdater.on('update-available', (info) => {
     logEvent(`Доступно обновление: версия ${info.version}`);
 });
 
-// Обработка события загрузки обновления
-autoUpdater.on('update-downloaded', (info) => {
-    logEvent(`Обновление загружено, версия: ${info.version}`);
-    logEvent('Установка обновления...');
-    try {
-        autoUpdater.quitAndInstall();
-    } catch (error) {
-        logEvent(`Ошибка установки обновления: ${error}`);
-    }
+autoUpdater.on('update-downloaded', async (info) => {
+    logEvent(`Обновление загружено: версия ${info.version}`);
+    await unpackAndUpdate();
+    app.quit();
 });
+
+// // Обработка события загрузки обновления
+// autoUpdater.on('update-downloaded', (info) => {
+//     logEvent(`Обновление загружено, версия: ${info.version}`);
+//     logEvent('Установка обновления...');
+//     try {
+//         console.log('Installing...')
+
+//         app.quit();
+//     } catch (error) {
+//         logEvent(`Ошибка установки обновления: ${error}`);
+//     }
+// });
+
+// Просто функция для распаковки zip файла
+async function unpackAndUpdate() {
+    logEvent('Начинается распаковка архива...');
+    const userHomeDir = process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
+    const zipPath = path.join(userHomeDir, 'AppData', 'Local', 'slpb', 'pending', 'slpb-win32-x64.zip');
+    const tempDir = path.join(__dirname, '../../temp');
+
+    try {
+        // Создание новой директории temp, если она не существует
+        if (!fs.existsSync(tempDir)) {
+            fs.mkdirSync(tempDir, { recursive: true });
+            logEvent(`Создана директория ${tempDir}`);
+        }
+
+        // Распаковка архива в директорию temp
+        logEvent(`Начинается распаковка архива ${zipPath} в ${tempDir}`);
+        await extract(zipPath, { dir: tempDir });
+        logEvent(`Распаковка успешно завершена в директорию ${tempDir}`);
+        started_copy_program();
+    } catch (err) {
+        logEvent(`Ошибка распаковки архива: ${err}`);
+    }
+}
 
 // Создание главного окна приложения
 function createWindow() {

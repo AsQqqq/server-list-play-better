@@ -1,6 +1,6 @@
 {
   "name": "slpb",
-  "version": "0.5.1-beta",
+  "version": "0.5.2-beta",
   "server_version": "0.0.2-beta",
   "date": "2024-08-24",
   "description": "Список серверов Counter Strike 2",
@@ -40,6 +40,7 @@
     "electron-log": "^5.1.7",
     "electron-squirrel-startup": "^1.0.1",
     "electron-updater": "^6.2.1",
+    "extract-zip": "^2.0.1",
     "node-fetch": "^3.3.2",
     "path-browserify": "^1.0.1",
     "update-electron-app": "^3.0.0",
