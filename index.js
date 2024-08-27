@@ -40,10 +40,10 @@ if (!process.env.REPO_OWNER || !process.env.REPO_NAME) {
     app.quit();
 }
 
-// Установка URL для обновлений
-const server = 'https://update.electronjs.org';
-const feed = `${server}/${process.env.REPO_OWNER}/${process.env.REPO_NAME}/${process.platform}-${process.arch}/${app.getVersion()}`;
-log.info(`URL для обновлений: ${feed}`);
+autoUpdater.setFeedURL({ 
+    provider: 'generic', 
+    url: 'https://github.com/AsQqqq/server-list-play-better/releases/download' 
+});
 
 
 // Установка NODE_ENV по умолчанию

@@ -133,22 +133,20 @@ jobs:
         asset_path: ./slpb-win32-x64.zip
         asset_name: slpb-win32-x64.zip
         asset_content_type: application/zip
-        
-    - name: Get Release Asset URL
-      id: get_asset_url
+    
+    - name: Generate sha512
+      id: generate_sha512
       run: |
-        API_URL="https://api.github.com/repos/${{ github.repository }}/releases/tags/${GITHUB_REF##*/}"
-        ASSET_ID=$(curl $API_URL | jq -r '.assets[] | select(.name == "slpb-win32-x64.zip") | .id')
-        DOWNLOAD_URL="https://github.com/${{ github.repository }}/releases/download/${GITHUB_REF##*/}/slpb-win32-x64.zip"
-        echo "DOWNLOAD_URL=${DOWNLOAD_URL}" >> $GITHUB_ENV
+        sha512sum slpb-win32-x64.zip | awk '{ print $1 }' > sha512.txt
+        sha512=$(cat sha512.txt)
+        echo "::set-output name=sha512::$sha512"
 
     - name: Create latest.yml
       run: |
         VERSION=${GITHUB_REF##*/}
         echo "version: '${VERSION}'" > latest.yml
-        download_url=${DOWNLOAD_URL}
-        echo "path: '${download_url}'" >> latest.yml
-        echo "sha512: '${{ env.sha512 }}'" >> latest.yml
+        echo "path: 'slpb-win32-x64.zip'" >> latest.yml
+        echo "sha512: '${{ steps.generate_sha512.outputs.sha512 }}'" >> latest.yml
         echo "releaseDate: '$(date -u +"%Y-%m-%dT%H:%M:%SZ")'" >> latest.yml
 
     - name: Upload Release Assets (latest.yml)
