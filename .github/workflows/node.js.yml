@@ -121,7 +121,7 @@ jobs:
       with:
         tag_name: ${{ env.VERSION }}
         release_name: ${{ env.VERSION }}
-        draft: true
+        draft: false
         prerelease: false
 
     - name: Upload Release Assets (Individual Files)
@@ -137,7 +137,7 @@ jobs:
     - name: Create latest.yml
       run: |
         VERSION=${GITHUB_REF##*/}
-        echo "version: 'v${VERSION}'" > latest.yml
+        echo "version: '${VERSION}'" > latest.yml
         download_url=$(gh release view $VERSION --json assets | jq -r '.assets[] | select(.name == "slpb-win32-x64.zip").url')
         echo "path: '${download_url}'" >> latest.yml
         echo "sha512: '${{ steps.calculate-sha.outputs.sha512 }}'" >> latest.yml
