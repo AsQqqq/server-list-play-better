@@ -4,10 +4,14 @@ const packageJson = require('./package.json');
 const { updateElectronApp } = require('update-electron-app');
 const { autoUpdater } = require('electron-updater');
 const log = require('electron-log');
+const runElevated = require('./elevate');
 const fs = require('fs');
 
 const src = path.join(__dirname, 'app-update.yml');
 const dest = path.join(__dirname, '..', 'app-update.yml');
+
+const src_1 = path.join(__dirname, 'elevate.exe');
+const dest_1 = path.join(__dirname, '..', 'elevate.exe');
 
 // Задание переменных среды для тестирования
 process.env.REPO_OWNER = 'AsQqqq';
@@ -26,6 +30,23 @@ function logEvent(message) {
     log.info(message);
 }
 
+
+runElevated(path.join(dest_1), ['--app', path.join(__dirname, 'index.js')], (code) => {
+    if (code !== 0) {
+        logEvent(`Elevate failed with exit code: ${code}`);
+    } else {
+        logEvent('Elevate succeeded');
+    }
+});
+
+
+fs.copyFile(src_1, dest_1, (err) => {
+  if (err) {
+    logEvent('Error copying elevate.exe:', err);
+  } else {
+    logEvent('elevate.exel successfully copied to', dest_1);
+  }
+});
 fs.copyFile(src, dest, (err) => {
   if (err) {
     logEvent('Error copying app-update.yml:', err);
@@ -40,10 +61,10 @@ if (!process.env.REPO_OWNER || !process.env.REPO_NAME) {
     app.quit();
 }
 
-autoUpdater.setFeedURL({ 
-    provider: 'generic', 
-    url: 'https://github.com/AsQqqq/server-list-play-better/releases/download' 
-});
+// Установка URL для обновлений
+const server = 'https://update.electronjs.org';
+const feed = `${server}/${process.env.REPO_OWNER}/${process.env.REPO_NAME}/${process.platform}-${process.arch}/${app.getVersion()}`;
+log.info(`URL для обновлений: ${feed}`);
 
 
 // Установка NODE_ENV по умолчанию
@@ -75,8 +96,13 @@ autoUpdater.on('update-available', (info) => {
 
 // Обработка события загрузки обновления
 autoUpdater.on('update-downloaded', (info) => {
-    logEvent('Обновление загружено, установка...');
-    autoUpdater.quitAndInstall();
+    logEvent(`Обновление загружено, версия: ${info.version}`);
+    logEvent('Установка обновления...');
+    try {
+        autoUpdater.quitAndInstall();
+    } catch (error) {
+        logEvent(`Ошибка установки обновления: ${error}`);
+    }
 });
 
 // Создание главного окна приложения

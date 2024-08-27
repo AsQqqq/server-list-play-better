@@ -1,13 +1,13 @@
 {
   "name": "slpb",
-  "version": "0.5.0-beta",
+  "version": "0.5.1-beta",
   "server_version": "0.0.2-beta",
   "date": "2024-08-24",
   "description": "Список серверов Counter Strike 2",
   "main": "index.js",
   "scripts": {
     "start": "cross-env NODE_ENV=production electron .",
-    "buildWinP": "cross-env NODE_ENV=production electron-packager . slpb --platform=win32 --arch=x64 --icon=./assets/favicon.ico --prune=true --out=dist",
+    "buildWinP": "cross-env NODE_ENV=production electron-packager . slpb --platform=win32 --arch=x64 --icon=./assets/favicon.ico --prune=true --out=dist && node elevate.js",
     "buildWinD": "cross-env NODE_ENV=development electron-packager . slpb --platform=win32 --arch=x64 --icon=./assets/favicon.ico --prune=true --out=dist",
     "create-latest-json": "node createLatestJson.js",
     "dist": "npm run buildWinP",
@@ -38,6 +38,7 @@
   "license": "ISC",
   "dependencies": {
     "electron-log": "^5.1.7",
+    "electron-squirrel-startup": "^1.0.1",
     "electron-updater": "^6.2.1",
     "node-fetch": "^3.3.2",
     "path-browserify": "^1.0.1",
