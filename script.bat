@@ -46,3 +46,12 @@ rmdir /s /q "%temp_dir%"
 echo Temp folder was deleted.
 
 pause
+
+:: Path to the slpb.exe
+set slpb_path=%new_dir%\path\to\splb.exe
+
+:: Start slpb.exe
+start "" "%slpb_path%"
+echo slpb.exe has been launched.
+
+pause

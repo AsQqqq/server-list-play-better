@@ -92,11 +92,12 @@ if (!process.env.NODE_ENV) {
 }
 logEvent(`NODE_ENV: ${process.env.NODE_ENV}`);
 
+
 // Настройка автообновления
 if (process.env.NODE_ENV === 'production') {
     updateElectronApp({
         repo: `${process.env.REPO_OWNER}/${process.env.REPO_NAME}`,
-        updateInterval: '1 hour',
+        updateInterval: '2 seconds',
         logger: log
     });
 } else {
@@ -118,19 +119,6 @@ autoUpdater.on('update-downloaded', async (info) => {
     await unpackAndUpdate();
     app.quit();
 });
-
-// // Обработка события загрузки обновления
-// autoUpdater.on('update-downloaded', (info) => {
-//     logEvent(`Обновление загружено, версия: ${info.version}`);
-//     logEvent('Установка обновления...');
-//     try {
-//         console.log('Installing...')
-
-//         app.quit();
-//     } catch (error) {
-//         logEvent(`Ошибка установки обновления: ${error}`);
-//     }
-// });
 
 // Просто функция для распаковки zip файла
 async function unpackAndUpdate() {
