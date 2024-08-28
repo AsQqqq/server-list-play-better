@@ -34,7 +34,7 @@ ChangesAssociations=yes
 DisableProgramGroupPage=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
-OutputDir=C:\Users\Danila\Desktop\result
+OutputDir=C:\Users\Danila\Documents\client_server_list\result
 OutputBaseFilename=SLPB-installer
 SetupIconFile=C:\Users\Danila\Documents\client_server_list\assets\favicon.ico
 Compression=lzma
@@ -47,6 +47,7 @@ Name: "russian"; MessagesFile: "compiler:Languages\Russian.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
+Name: "autostart"; Description: "Запускать {#MyAppName} при старте Windows"; GroupDescription: "Дополнительно"; Flags: unchecked
 
 [Files]
 Source: "C:\Users\Danila\Documents\client_server_list\dist\slpb-win32-x64\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
@@ -67,3 +68,5 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 
+[Registry]
+Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: string; ValueName: "{#MyAppName}"; ValueData: """{app}\{#MyAppExeName}"""; Flags: uninsdeletevalue; Tasks: autostart

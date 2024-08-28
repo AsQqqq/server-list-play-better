@@ -16,39 +16,39 @@ set new_dir=%cd%
 echo New directory after moving up: %new_dir%
 pause
 
-:: Path to the file that needs to be checked and deleted
-set file_to_delete=%new_dir%\temp\resources\app\script.bat
+@REM :: Path to the file that needs to be checked and deleted
+@REM set file_to_delete=%new_dir%\temp\resources\app\script.bat
 
-echo Path to file script.bat: %file_to_delete%
-pause
+@REM echo Path to file script.bat: %file_to_delete%
+@REM pause
 
-:: Check if the file exists and delete it if it does
-if exist "%file_to_delete%" (
-    del "%file_to_delete%"
-    echo File script.bat was deleted from folder resources\app.
-) else (
-    echo File script.bat was not found in folder resources\app.
-)
+@REM :: Check if the file exists and delete it if it does
+@REM if exist "%file_to_delete%" (
+@REM     del "%file_to_delete%"
+@REM     echo File script.bat was deleted from folder resources\app.
+@REM ) else (
+@REM     echo File script.bat was not found in folder resources\app.
+@REM )
 
-pause
+@REM pause
 
-:: Path to the "temp" folder
-set temp_dir=%new_dir%\temp
+@REM :: Path to the "temp" folder
+@REM set temp_dir=%new_dir%\temp
 
-:: Copy contents from the "temp" folder to the current folder, overwriting existing files
-xcopy /s /e /y "%temp_dir%\*" "%new_dir%\"
+@REM :: Copy contents from the "temp" folder to the current folder, overwriting existing files
+@REM xcopy /s /e /y "%temp_dir%\*" "%new_dir%\"
 
-:: Inform the user that the operation is complete
-echo Copying completed.
+@REM :: Inform the user that the operation is complete
+@REM echo Copying completed.
 
-:: Delete the "temp" folder and its contents
-rmdir /s /q "%temp_dir%"
-echo Temp folder was deleted.
+@REM :: Delete the "temp" folder and its contents
+@REM rmdir /s /q "%temp_dir%"
+@REM echo Temp folder was deleted.
 
-pause
+@REM pause
 
 :: Path to the slpb.exe
-set slpb_path=%new_dir%\path\to\splb.exe
+set slpb_path=splb.exe
 
 :: Start slpb.exe
 start "" "%slpb_path%"
