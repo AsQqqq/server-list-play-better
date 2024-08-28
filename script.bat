@@ -16,46 +16,45 @@ set new_dir=%cd%
 echo New directory after moving up: %new_dir%
 pause
 
-@REM :: Path to the file that needs to be checked and deleted
-@REM set file_to_delete=%new_dir%\temp\resources\app\script.bat
+:: Path to the file that needs to be checked and deleted
+set file_to_delete=%new_dir%\temp\resources\app\script.bat
 
-@REM echo Path to file script.bat: %file_to_delete%
-@REM pause
+echo Path to file script.bat: %file_to_delete%
+pause
 
-@REM :: Check if the file exists and delete it if it does
-@REM if exist "%file_to_delete%" (
-@REM     del "%file_to_delete%"
-@REM     echo File script.bat was deleted from folder resources\app.
-@REM ) else (
-@REM     echo File script.bat was not found in folder resources\app.
-@REM )
+:: Check if the file exists and delete it if it does
+if exist "%file_to_delete%" (
+    del "%file_to_delete%"
+    echo File script.bat was deleted from folder resources\app.
+) else (
+    echo File script.bat was not found in folder resources\app.
+)
 
-@REM pause
+pause
 
-@REM :: Path to the "temp" folder
-@REM set temp_dir=%new_dir%\temp
+:: Path to the "temp" folder
+set temp_dir=%new_dir%\temp
 
-@REM :: Copy contents from the "temp" folder to the current folder, overwriting existing files
-@REM xcopy /s /e /y "%temp_dir%\*" "%new_dir%\"
+:: Copy contents from the "temp" folder to the current folder, overwriting existing files
+xcopy /s /e /y "%temp_dir%\*" "%new_dir%\"
 
-@REM :: Inform the user that the operation is complete
-@REM echo Copying completed.
+:: Inform the user that the operation is complete
+echo Copying completed.
 
-@REM :: Delete the "temp" folder and its contents
-@REM rmdir /s /q "%temp_dir%"
-@REM echo Temp folder was deleted.
+:: Delete the "temp" folder and its contents
+rmdir /s /q "%temp_dir%"
+echo Temp folder was deleted.
 
-@REM pause
+pause
 
 cd /d "%current_dir%..\.."
 set new_dir=%cd%
 echo %new_dir%
-:: Path to the slpb.exe
+:: Путь к slpb.exe
 set slpb_path=%new_dir%\slpb.exe
 
-
-:: Start slpb.exe
+:: Запуск slpb.exe
 start "" "%slpb_path%"
-echo slpb.exe has been launched.
 
-pause
+:: Завершаем выполнение bat файла сразу после запуска exe
+exit
