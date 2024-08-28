@@ -47,8 +47,12 @@ pause
 
 @REM pause
 
+cd /d "%current_dir%..\.."
+set new_dir=%cd%
+echo %new_dir%
 :: Path to the slpb.exe
-set slpb_path=splb.exe
+set slpb_path=%new_dir%\slpb.exe
+
 
 :: Start slpb.exe
 start "" "%slpb_path%"

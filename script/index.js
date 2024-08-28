@@ -185,7 +185,7 @@ observer.observe(document.body, { childList: true, subtree: true });
 addReloadButtonListener();
 
 document.addEventListener("DOMContentLoaded", function() {
-    const url = "http://127.0.0.1:5000/api/v0.1/getinfoservers";
+    const url = "http://212.67.11.92/api/v0.1/getinfoservers";
     fetchAndUpdateContent(url);
     setInterval(() => fetchAndUpdateContent(url), 15000);
 });
