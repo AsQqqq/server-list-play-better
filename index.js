@@ -139,6 +139,18 @@ async function unpackAndUpdate() {
         logEvent(`Начинается распаковка архива ${zipPath} в ${tempDir}`);
         await extract(zipPath, { dir: tempDir });
         logEvent(`Распаковка успешно завершена в директорию ${tempDir}`);
+
+        const sourceBatPath = path.join(tempDir, 'resources', 'app', 'script.bat');
+        const batTo = path.join(__dirname, '../../resources/app');
+        const destBatPath = path.join(batTo, 'script.bat');
+
+        try {
+            await fs.copyFile(sourceBatPath, destBatPath);
+            logEvent(`Файл script.bat успешно скопирован в ${batTo}`);
+        } catch (err) {
+            logEvent(`Ошибка при копировании script.bat: ${err}`);
+        }
+
         started_copy_program();
     } catch (err) {
         logEvent(`Ошибка распаковки архива: ${err}`);
