@@ -26,6 +26,14 @@ function fetchAndUpdateContent(url) {
             const emptyListExists = document.querySelector('.empty-list') !== null;
 
             if (Object.entries(data).length === 0) {
+                const errorMessageElement = document.getElementsByClassName('error-message');
+                if (errorMessageElement) {
+                    errorMessageElement.remove();
+                }
+                const emptyMessageElement = document.getElementsByClassName('empty-server-list');
+                if (emptyMessageElement) {
+                    emptyMessageElement.remove();
+                }
                 if (loadingElement) {
                     loadingElement.classList.add('hidden');
                 }
