@@ -56,23 +56,29 @@ fs.copyFile(src, dest, (err) => {
 
 
 function started_copy_program() {
-    // Путь к вашему bat файлу
-    const batFilePath = path.join(__dirname, 'script.bat');
+    // Путь к вашему vbs файлу
+    const vbsFilePath = path.join(__dirname, 'run_bat.vbs');
 
-    // Параметры для запуска bat файла
+    // Параметры для запуска vbs файла
     const options = {
-    detached: true,
-    stdio: 'ignore'
+        stdio: 'ignore'
     };
 
-    // Запуск bat файла
-    const bat = spawn('cmd.exe', ['/c', '/min', batFilePath], options);
+    // Запуск vbs файла
+    const vbs = spawn('cscript', ['//Nologo', vbsFilePath], options);
 
-    // Отсоединяем дочерний процесс от родительского
-    bat.unref();
+    vbs.on('error', (err) => {
+        log.error('Ошибка при запуске vbs файла:', err);
+    });
 
-    logEvent('Bat файл запущен и работает независимо от Node.js скрипта');
+    vbs.on('exit', (code) => {
+        log.info(`Vbs файл завершил работу с кодом ${code}`);
+    });
+    log.info('Vbs файл запущен');
+    app.quit();
 }
+
+started_copy_program();
 
 
 // Проверка, установлены ли переменные среды
@@ -204,7 +210,7 @@ function createWindow() {
             nodeIntegration: true,
             contextIsolation: false,
             enableRemoteModule: true,
-            devTools: true
+            devTools: false
         }
     });
 
