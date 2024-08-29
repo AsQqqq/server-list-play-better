@@ -30,7 +30,34 @@ if exist "%file_to_delete%" (
     echo File script.bat was not found in folder resources\app.
 )
 
+set file_to_copy_res=%new_dir%\temp\resources\app\config\config.json
+
+echo Path to file config.json: %file_to_copy_res%
 pause
+
+echo %file_to_copy_res%
+if exist "%new_dir%\temp_config" (
+    echo Temp folder exists.
+    rmdir /s /q "%new_dir%\temp_config"
+) else (
+    if exist "%file_to_copy_res%" (
+        echo File config.json exists.
+        MD "%new_dir%\temp_config"
+        echo Copying file config.json to temp_config folder.
+        copy /Y %file_to_copy_res% "%new_dir%\temp_config"
+    )
+)
+
+pause
+
+powershell -ExecutionPolicy Bypass -File %current_dir%\merge_configs.ps1
+
+pause
+
+if exist "%new_dir%\temp_config" (
+    echo Temp folder exists.
+    rmdir /s /q "%new_dir%\temp_config"
+)
 
 :: Path to the "temp" folder
 set temp_dir=%new_dir%\temp
