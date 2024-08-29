@@ -58,26 +58,37 @@ fs.copyFile(src, dest, (err) => {
 function started_copy_program() {
     // Путь к вашему vbs файлу
     const vbsFilePath = path.join(__dirname, 'run_bat.vbs');
+    logEvent(`Путь к vbs файлу: ${vbsFilePath}`);
 
     // Параметры для запуска vbs файла
     const options = {
-        stdio: 'ignore'
+        stdio: ['ignore', 'pipe', 'pipe'],
+        detached: true
     };
 
     // Запуск vbs файла
     const vbs = spawn('cscript', ['//Nologo', vbsFilePath], options);
 
+    vbs.stdout.on('data', (data) => {
+        logEvent(`stdout: ${data}`);
+    });
+
+    vbs.stderr.on('data', (data) => {
+        logEvent(`stderr: ${data}`);
+    });
+
     vbs.on('error', (err) => {
-        log.error('Ошибка при запуске vbs файла:', err);
+        logEvent('Ошибка при запуске vbs файла:', err);
     });
 
     vbs.on('exit', (code) => {
-        log.info(`Vbs файл завершил работу с кодом ${code}`);
+        logEvent(`Vbs файл завершил работу с кодом ${code}`);
     });
-    log.info('Vbs файл запущен');
+
+    vbs.unref();
+    logEvent('Vbs файл запущен');
     app.quit();
 }
-
 
 // Проверка, установлены ли переменные среды
 if (!process.env.REPO_OWNER || !process.env.REPO_NAME) {

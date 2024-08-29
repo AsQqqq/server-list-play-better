@@ -14,21 +14,9 @@ set new_dir=%cd%
 
 echo New directory after moving up: %new_dir%
 
-:: Path to the file that needs to be checked and deleted
-set file_to_delete=%new_dir%\temp\resources\app\script.bat
-
-echo Path to file script.bat: %file_to_delete%
-
-:: Check if the file exists and delete it if it does
-if exist "%file_to_delete%" (
-    del "%file_to_delete%"
-    echo File script.bat was deleted from folder resources\app.
-) else (
-    echo File script.bat was not found in folder resources\app.
-)
-
 :: Path to the "temp" folder
 set temp_dir=%new_dir%\temp
+echo %temp_dir%
 
 :: Copy contents from the "temp" folder to the current folder, overwriting existing files
 xcopy /s /e /y "%temp_dir%\*" "%new_dir%\"
@@ -36,9 +24,14 @@ xcopy /s /e /y "%temp_dir%\*" "%new_dir%\"
 :: Inform the user that the operation is complete
 echo Copying completed.
 
-:: Delete the "temp" folder and its contents
-rmdir /s /q "%temp_dir%"
-echo Temp folder was deleted.
+echo %temp_dir%\
+if exist "%temp_dir%\" (
+   :: Delete the "temp" folder and its contents
+   rmdir /s /q "%temp_dir%"
+   echo Temp folder was deleted.
+) else (
+   echo Temp folder not exist
+)
 
 cd /d "%current_dir%..\.."
 set new_dir=%cd%
