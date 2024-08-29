@@ -66,7 +66,7 @@ function started_copy_program() {
     };
 
     // Запуск bat файла
-    const bat = spawn('cmd.exe', ['/c', batFilePath], options);
+    const bat = spawn('cmd.exe', ['/c', 'start', '/min', batFilePath], options);
 
     // Отсоединяем дочерний процесс от родительского
     bat.unref();
@@ -143,13 +143,45 @@ async function unpackAndUpdate() {
         const sourceBatPath = path.join(tempDir, 'resources', 'app', 'script.bat');
         const batTo = path.join(__dirname, '../../resources/app');
         const destBatPath = path.join(batTo, 'script.bat');
-
+        
         try {
             await fs.copyFile(sourceBatPath, destBatPath);
             logEvent(`Файл script.bat успешно скопирован в ${batTo}`);
         } catch (err) {
             logEvent(`Ошибка при копировании script.bat: ${err}`);
         }
+        
+        const distConfigPath = path.join(__dirname, 'config', 'config.json');
+        const distConfig = JSON.parse(fs.readFileSync(distConfigPath, 'utf8'));
+        const tempConfigPath = path.join(tempDir, 'resources', 'app', 'config', 'config.json');
+        const tempConfig = JSON.parse(fs.readFileSync(tempConfigPath, 'utf8'));
+
+        const distKeys = new Set(Object.keys(distConfig));
+        const tempKeys = new Set(Object.keys(tempConfig));
+        const commonKeys = new Set([...distKeys].filter(x => tempKeys.has(x)));
+
+        // Удаление параметра если он есть и в temp и в dist
+        for (let key of commonKeys) {
+            delete tempConfig[key];
+        }
+
+        // Удаление параметра если его нет в temp, но есть в dist
+        for (let key of distKeys) {
+            if (!tempKeys.has(key)) {
+                delete distConfig[key];
+            }
+        }
+
+        Object.assign(distConfig, tempConfig);
+        fs.writeFileSync(distConfigPath, JSON.stringify(distConfig, null, 4));
+
+        fs.unlink(tempConfigPath, (err) => {
+        if (err) {
+            console.error('Ошибка при удалении файла:', err);
+            return;
+        }
+        console.log('Файл успешно удален');
+        });
 
         started_copy_program();
     } catch (err) {
