@@ -20,7 +20,7 @@ function fetchAndUpdateContent(url) {
                     emptyBlock.className = 'empty-server-list';
                     emptyBlock.innerHTML = `
                         <div class="empty-list">
-                            <img src="../image/icon/empty.png" alt="Empty server" class="image-empty">
+                            <img src="../image/icon/empty.png" alt="Empty server" class="image-empty" draggable="false">
                             <div class="refresh-instruction title-text">CTRL + R</div>
                         </div>
                     `;
@@ -129,10 +129,10 @@ function updateServerCards(currentServers, data, contentElement) {
                 <div class="people title-text">${serverInfo.now_players}/${serverInfo.max_players}</div>
                 <div class="play">
                     <div class="play-icon" data-connect-server="${serverInfo.connect_server}">
-                        <img src="../image/icon/play-icon.png" alt="Play-icon">
+                        <img src="../image/icon/play-icon.png" alt="Play-icon" draggable="false">
                     </div>
                     <div class="circle-icon">
-                        <img src="../image/icon/circle.png" alt="circle-icon">
+                        <img src="../image/icon/circle.png" alt="circle-icon" draggable="false">
                     </div>
                 </div>
                 <div class="server_name title-text">${serverInfo.server_name}</div>

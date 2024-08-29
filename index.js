@@ -213,9 +213,9 @@ autoUpdater.on('error', (error) => {
 // Обработка события доступности обновления
 autoUpdater.on('update-available', (info) => {
     logEvent(`Доступно обновление: версия ${info.version}`);
-    mainWindow.webContents.on('did-finish-load', () => {
-        mainWindow.webContents.send('update-available');
-    });
+    logEvent('Отправка уведомления о доступности обновления');
+    logEvent('Увдомление отправлено');
+    mainWindow.webContents.send('update-available');
 });
 
 
