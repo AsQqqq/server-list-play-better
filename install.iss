@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "SLPB"
-#define MyAppVersion "0.5.8-beta"
+#define MyAppVersion "0.6.1-beta"
 #define MyAppPublisher "AsQ Inc."
 #define MyAppURL "https://t.me/danilka_pikaso"
 #define MyAppExeName "slpb.exe"
