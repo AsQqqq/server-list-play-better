@@ -27,6 +27,11 @@ ipcRenderer.on('app-info', (event, appInfo) => {
 });
 
 
+ipcRenderer.on('update-available', (event) => {
+    document.getElementsByClassName('updateUP')[0].style.opacity = "100%";
+});
+
+
 async function loadGitHubVersion() {
     try {
         const response = await fetch('https://api.github.com/repos/AsQqqq/server-list-play-better/contents/package.json');

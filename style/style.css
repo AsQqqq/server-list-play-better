@@ -58,10 +58,62 @@ div.app {
 
 div.header {
     display: grid;
-    grid-template-columns: 10px 40px 1fr 50px 50px 50px 50px 10px;
+    grid-template-columns: 10px 40px 1fr 50px 50px 50px 50px 50px 10px;
     height: 40px;
     background-color: #212121;
     align-items: center; /* Добавлено выравнивание элементов по центру */
+}
+
+div.updateUP {
+    opacity: 0;
+    align-content: center;
+    transition: opacity 0.3s ease-out;
+}
+
+img.images_update_up {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5px;
+    transition: transform 0.3s ease;
+}
+
+img.images_update_up:hover {
+    transform: scale(1.1);
+    transition: transform 0.3s ease;
+}
+
+div.updateUP img {
+    height: 25px;
+    width: 25px;
+}
+
+[data-title] {
+    position: relative;
+}
+[data-title]::after {
+    content: attr(data-title);
+    position: absolute;
+    left: 0; top: 1em;
+    opacity: 0;
+    transition: 0.3s;
+    color: #fff;
+    padding: 0.5em;
+    background-color: rgba(0, 0, 0, 0.468);
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    z-index: 5;
+    font-size: 15px;
+    margin-left: -30px;
+    margin-top: 20px;
+    line-height: 1.2;
+    font-family: "Cannonade";
+    backdrop-filter: blur(5px);
+}
+
+[data-title]:hover::after {
+    opacity: 1;
 }
 
 div.header > div.title {

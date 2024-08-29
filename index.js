@@ -104,21 +104,22 @@ if (process.env.NODE_ENV === 'production') {
     logEvent('Программа в режиме разработки; пропуск проверки обновлений.');
 }
 
-// Обработка ошибок автообновления
-autoUpdater.on('error', (error) => {
-    logEvent(`Ошибка обновления: ${error}`);
-});
 
-// Обработка события доступности обновления
-autoUpdater.on('update-available', (info) => {
-    logEvent(`Доступно обновление: версия ${info.version}`);
-});
+let mainWindow;
+const gotTheLock = app.requestSingleInstanceLock();
 
-autoUpdater.on('update-downloaded', async (info) => {
-    logEvent(`Обновление загружено: версия ${info.version}`);
-    await unpackAndUpdate();
+
+if (!gotTheLock) {
     app.quit();
-});
+} else {
+    app.on('second-instance', (event, commandLine, workingDirectory) => {
+        // Фокусируем главное окно, если оно уже открыто
+        if (mainWindow) {
+            if (mainWindow.isMinimized()) mainWindow.restore();
+            mainWindow.focus();
+        }
+    });
+}
 
 // Просто функция для распаковки zip файла
 async function unpackAndUpdate() {
@@ -147,7 +148,7 @@ async function unpackAndUpdate() {
 // Создание главного окна приложения
 function createWindow() {
     logEvent('Создание главного окна приложения');
-    const win = new BrowserWindow({
+    mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
         minHeight: 400,
@@ -163,9 +164,9 @@ function createWindow() {
         }
     });
 
-    win.webContents.on('did-finish-load', () => {
+    mainWindow.webContents.on('did-finish-load', () => {
         logEvent('Главное окно загружено');
-        win.webContents.send('app-info', {
+        mainWindow.webContents.send('app-info', {
             version: packageJson.version,
             server_version: packageJson.server_version,
             date: packageJson.date
@@ -174,39 +175,61 @@ function createWindow() {
 
     ipcMain.on('minimize-window', () => {
         logEvent('Окно свернуто');
-        win.minimize();
+        mainWindow.minimize();
     });
 
     ipcMain.on('maximize-window', () => {
-        if (!win.isMaximized()) {
+        if (!mainWindow.isMaximized()) {
             logEvent('Окно развернуто');
-            win.maximize();
+            mainWindow.maximize();
         } else {
             logEvent('Окно свернуто с развернутого состояния');
-            win.unmaximize();
+            mainWindow.unmaximize();
         }
     });
 
     ipcMain.on('get-state-window', (event) => {
         logEvent('Запрос состояния окна');
         event.returnValue = {
-            isMaximized: win.isMaximized()
+            isMaximized: mainWindow.isMaximized()
         };
     });
 
     ipcMain.on('close-window', () => {
         logEvent('Окно закрыто');
-        win.close();
+        mainWindow.close();
     });
 
     logEvent('Загрузка страницы дизайна');
-    win.loadFile('design/index.html');
+    mainWindow.loadFile('design/index.html');
 }
+
+
+// Обработка ошибок автообновления
+autoUpdater.on('error', (error) => {
+    logEvent(`Ошибка обновления: ${error}`);
+});
+
+// Обработка события доступности обновления
+autoUpdater.on('update-available', (info) => {
+    logEvent(`Доступно обновление: версия ${info.version}`);
+    mainWindow.webContents.on('did-finish-load', () => {
+        mainWindow.webContents.send('update-available');
+    });
+});
+
+
+autoUpdater.on('update-downloaded', async (info) => {
+    logEvent(`Обновление загружено: версия ${info.version}`);
+    await unpackAndUpdate();
+    app.quit();
+});
+
+
 
 app.whenReady().then(() => {
     logEvent('Приложение готово, создание окна');
     createWindow();
-
     // Инициализация автообновления
     autoUpdater.checkForUpdatesAndNotify();
 });

@@ -1,4 +1,4 @@
-const { shell } = require('electron');
+const { shell, ipcRenderer } = require('electron');
 
 let currentServers = new Map();
 
