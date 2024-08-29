@@ -78,8 +78,6 @@ function started_copy_program() {
     app.quit();
 }
 
-started_copy_program();
-
 
 // Проверка, установлены ли переменные среды
 if (!process.env.REPO_OWNER || !process.env.REPO_NAME) {
