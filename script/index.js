@@ -1,5 +1,20 @@
 const { shell, ipcRenderer } = require('electron');
 
+const configData = require('../config/config.json');
+
+function readPBFromConfig() {
+    console.log(configData.pb);
+    if (configData.pb == "true") {
+      // Значение config.pb истинно (true), выполняем блок кода
+      console.log('Значение config.pb истинно');
+      return true;
+    } else {
+      // Значение config.pb ложно (false), выполняем блок кода
+      console.log('Значение config.pb ложно');
+      return false;
+    }
+  }
+
 let currentServers = new Map();
 
 function fetchAndUpdateContent(url) {
@@ -120,24 +135,45 @@ function updateServerCards(currentServers, data, contentElement) {
             serverBlock.setAttribute('data-port', port);
 
             const imageUrl = `../image/${serverInfo.map}.png`;
+            
+            let bpb = readPBFromConfig();
+            if (bpb == true) {
+                serverBlock.innerHTML = `
+                    <div class="image" style="background-image: 
+                        linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(0, 0, 0, 0.986) 80%),
+                        url('${imageUrl}');"></div>
+                    <div class="people title-text">${serverInfo.now_players}/${serverInfo.max_players}</div>
+                    <div class="play">
+                        <div class="play-icon" data-connect-server="${serverInfo.connect_server}">
+                            <img src="../image/icon/play-icon.png" alt="Play-icon" draggable="false">
+                        </div>
+                        <div class="circle-icon">
+                            <img src="../image/icon/circle.png" alt="circle-icon" draggable="false">
+                        </div>
+                    </div>
+                    <div class="server_name title-text">${serverInfo.server_name}</div>
+                    <div class="map title-text">${serverInfo.map}</div>
+                `;
+            } else {
+                serverBlock.innerHTML = `
+                    <div class="image" style="background-image: 
+                        linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(0, 0, 0, 0.986) 80%),
+                        url('${imageUrl}');"></div>
+                    <div class="ping title-text ${pingClass}">${pingMs}</div>
+                    <div class="people title-text">${serverInfo.now_players}/${serverInfo.max_players}</div>
+                    <div class="play">
+                        <div class="play-icon" data-connect-server="${serverInfo.connect_server}">
+                            <img src="../image/icon/play-icon.png" alt="Play-icon" draggable="false">
+                        </div>
+                        <div class="circle-icon">
+                            <img src="../image/icon/circle.png" alt="circle-icon" draggable="false">
+                        </div>
+                    </div>
+                    <div class="server_name title-text">${serverInfo.server_name}</div>
+                    <div class="map title-text">${serverInfo.map}</div>
+                `;
 
-            serverBlock.innerHTML = `
-                <div class="image" style="background-image: 
-                    linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(0, 0, 0, 0.986) 80%),
-                    url('${imageUrl}');"></div>
-                <div class="ping title-text ${pingClass}">${pingMs}</div>
-                <div class="people title-text">${serverInfo.now_players}/${serverInfo.max_players}</div>
-                <div class="play">
-                    <div class="play-icon" data-connect-server="${serverInfo.connect_server}">
-                        <img src="../image/icon/play-icon.png" alt="Play-icon" draggable="false">
-                    </div>
-                    <div class="circle-icon">
-                        <img src="../image/icon/circle.png" alt="circle-icon" draggable="false">
-                    </div>
-                </div>
-                <div class="server_name title-text">${serverInfo.server_name}</div>
-                <div class="map title-text">${serverInfo.map}</div>
-            `;
+            }
             contentElement.appendChild(serverBlock);
 
             setTimeout(() => {
@@ -185,7 +221,13 @@ observer.observe(document.body, { childList: true, subtree: true });
 addReloadButtonListener();
 
 document.addEventListener("DOMContentLoaded", function() {
-    const url = "http://212.67.11.92/api/v0.1/getinfoservers";
+    let bpb = readPBFromConfig();
+    let url
+    if (bpb == true) {
+        url = "http://212.67.11.92/api/v0.1/getinfoserverslocal";
+    } else {
+        url = "http://212.67.11.92/api/v0.1/getinfoservers";
+    }
     fetchAndUpdateContent(url);
     setInterval(() => fetchAndUpdateContent(url), 15000);
 });
