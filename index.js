@@ -223,6 +223,14 @@ function createWindow() {
         }
     });
 
+    // Обработка события доступности обновления
+    autoUpdater.on('update-available', (info) => {
+        logEvent(`Доступно обновление: версия ${info.version}`);
+        logEvent('Отправка уведомления о доступности обновления');
+        logEvent('Увдомление отправлено');
+        mainWindow.webContents.send('update-available');
+    });
+
     mainWindow.webContents.on('did-finish-load', () => {
         logEvent('Главное окно загружено');
         mainWindow.webContents.send('app-info', {
