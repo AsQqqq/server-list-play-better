@@ -32,6 +32,7 @@ function fetchAndUpdateContent(url) {
                 console.log('Список серверов пуст');
                 if (!emptyListExists) {
                     const emptyBlock = document.createElement('div');
+                    document.getElementById('content').innerHTML = ``;
                     emptyBlock.className = 'empty-server-list';
                     emptyBlock.innerHTML = `
                         <div class="empty-list">

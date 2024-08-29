@@ -66,7 +66,7 @@ function started_copy_program() {
     };
 
     // Запуск bat файла
-    const bat = spawn('cmd.exe', ['/c', 'start', '/min', batFilePath], options);
+    const bat = spawn('cmd.exe', ['/c', '/min', batFilePath], options);
 
     // Отсоединяем дочерний процесс от родительского
     bat.unref();
@@ -204,7 +204,7 @@ function createWindow() {
             nodeIntegration: true,
             contextIsolation: false,
             enableRemoteModule: true,
-            devTools: false
+            devTools: true
         }
     });
 
