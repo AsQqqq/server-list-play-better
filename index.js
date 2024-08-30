@@ -225,21 +225,10 @@ function createWindow() {
 
     
     mainWindow.webContents.on('did-finish-load', () => {
-        logEvent('Главное окно загружено');
         mainWindow.webContents.send('app-info', {
             version: packageJson.version,
             server_version: packageJson.server_version,
             date: packageJson.date
-    });
-        
-    mainWindow.webContents.on('did-finish-load', () => {
-        // Обработка события доступности обновления
-        autoUpdater.on('update-available', (info) => {
-            logEvent(`Доступно обновление: версия ${info.version}`);
-            logEvent('Отправка уведомления о доступности обновления');
-            logEvent('Увдомление отправлено');
-            mainWindow.webContents.send('update-available');
-        });
     });
 });
 
@@ -280,14 +269,15 @@ autoUpdater.on('error', (error) => {
     logEvent(`Ошибка обновления: ${error}`);
 });
 
-// Обработка события доступности обновления
+ipcMain.on('check-for-updates', () => {
+    autoUpdater.checkForUpdatesAndNotify();
+});
+
 autoUpdater.on('update-available', (info) => {
     logEvent(`Доступно обновление: версия ${info.version}`);
     logEvent('Отправка уведомления о доступности обновления');
-    logEvent('Увдомление отправлено');
     mainWindow.webContents.send('update-available');
 });
-
 
 autoUpdater.on('update-downloaded', async (info) => {
     logEvent(`Обновление загружено: версия ${info.version}`);

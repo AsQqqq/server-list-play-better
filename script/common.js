@@ -27,6 +27,9 @@ ipcRenderer.on('app-info', (event, appInfo) => {
 });
 
 
+document.addEventListener('DOMContentLoaded', () => {
+    ipcRenderer.send('check-for-updates');
+});
 ipcRenderer.on('update-available', (event) => {
     document.getElementsByClassName('updateUP')[0].style.opacity = "100%";
 });
