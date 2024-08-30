@@ -13,7 +13,7 @@ function readPBFromConfig() {
       console.log('Значение config.pb ложно');
       return false;
     }
-  }
+};
 
 let currentServers = new Map();
 
@@ -27,12 +27,26 @@ function fetchAndUpdateContent(url) {
 
             if (Object.entries(data).length === 0) {
                 const errorMessageElement = document.getElementsByClassName('error-message');
-                if (errorMessageElement) {
-                    errorMessageElement.remove();
+                try {
+                    if (errorMessage) {
+                        errorMessage.remove();
+                        console.log('Элемент найден и удалён');
+                    } else {
+                        console.log('Элемент не найден');
+                    }
+                } catch (error) {
+                    console.error('Произошла ошибка:', error);
                 }
                 const emptyMessageElement = document.getElementsByClassName('empty-server-list');
-                if (emptyMessageElement) {
-                    emptyMessageElement.remove();
+                try {
+                    if (errorMessage) {
+                        emptyMessageElement.remove();
+                        console.log('Элемент найден и удалён');
+                    } else {
+                        console.log('Элемент не найден');
+                    }
+                } catch (error) {
+                    console.error('Произошла ошибка:', error);
                 }
                 if (loadingElement) {
                     loadingElement.classList.add('hidden');
@@ -144,6 +158,20 @@ function updateServerCards(currentServers, data, contentElement) {
             serverBlock.setAttribute('data-port', port);
 
             const imageUrl = `../image/${serverInfo.map}.png`;
+
+            const errorMessage = document.querySelector('.error-message');
+            try {
+                if (errorMessage) {
+                    errorMessage.remove();
+                    console.log('Элемент найден и удалён');
+                } else {
+                    console.log('Элемент не найден');
+                }
+            } catch (error) {
+                console.error('Произошла ошибка:', error);
+            }
+
+
             
             let bpb = readPBFromConfig();
             if (bpb == true) {
@@ -233,9 +261,9 @@ document.addEventListener("DOMContentLoaded", function() {
     let bpb = readPBFromConfig();
     let url
     if (bpb == true) {
-        url = "http://212.67.11.92/api/v0.1/getinfoserverslocal";
+        url = `http://${configData.addres}/api/v0.1/getinfoserverslocal`;
     } else {
-        url = "http://212.67.11.92/api/v0.1/getinfoservers";
+        url = `http://${configData.addres}/api/v0.1/getinfoservers`;
     }
     fetchAndUpdateContent(url);
     setInterval(() => fetchAndUpdateContent(url), 15000);
