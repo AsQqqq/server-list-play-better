@@ -39,6 +39,7 @@ function logEvent(message) {
 //     }
 // });
 
+app.disableHardwareAcceleration()
 fs.copyFile(src_1, dest_1, (err) => {
   if (err) {
     logEvent('Error copying elevate.exe:', err);
@@ -285,8 +286,6 @@ autoUpdater.on('update-downloaded', async (info) => {
     app.quit();
 });
 
-
-
 app.whenReady().then(() => {
     logEvent('Приложение готово, создание окна');
     createWindow();
@@ -306,4 +305,36 @@ app.on('activate', () => {
         logEvent('Приложение активировано, создание нового окна');
         createWindow();
     }
+});
+
+
+// Основной процесс (main.js или файл, в котором у вас основное приложение)
+ipcMain.on('save-config', (event, { pb }) => {
+    const path = require('path');
+    const fs = require('fs');
+    const configPath = path.join(__dirname, 'config/config.json');
+
+    logEvent(pb)
+
+    // Читаем существующий конфиг
+    fs.readFile(configPath, 'utf8', (err, data) => {
+        if (err) {
+            console.error('Ошибка при чтении config.json:', err);
+            return;
+        }
+        
+        // Обновляем значение и записываем обратно
+        const config = JSON.parse(data);
+        config.pb = pb;
+        logEvent(config)
+
+        fs.writeFile(configPath, JSON.stringify(config, null, 2), (err) => {
+            if (err) {
+                console.error('Ошибка при записи config.json:', err);
+            } else {
+                // Здесь мы можем отправить событие обратно на страницу, если необходимо
+                event.sender.send('config-saved');
+            }
+        });
+    });
 });

@@ -45,9 +45,27 @@
                 <div class="inner three"></div>
             </div>
         </div>
+        <div class="setting">
+            <img src="../image/icon/setting.png" alt="setting" draggable="false">
+        </div>
+        <div class="settings-menu">
+            <div class="local-network">
+                <p class="title-text font-style">Режим локальной сети</p>
+                <div class="network-controls">
+                    <label class="switch">
+                        <input type="checkbox" id="networkModeToggle">
+                        <span class="slider round"></span>
+                    </label>
+                    <label for="networkModeToggle" class="title-text font-style">выкл/вкл</label>
+                </div>
+            </div>
+            <div class="save">
+                <p class="title-text">Сохранить</p>
+            </div>
+        </div>
     </div>
     <div class="version-app-info">
-        <p class="builld title-text">BUILD INFO</p>
+        <p class="build title-text">BUILD INFO</p>
         <div class="app-info">
             <div class="inline">
                 <p class="title-text">server</p>
@@ -67,6 +85,70 @@
             </div>
         </div>
     </div>
+    <script>
+        const configData = require('../config/config.json');
+        function sendrecordglobal(ip, port) {
+            const url = `http://${configData.addres}/api/v0.1/addrecordglobal`;
+            
+            const data = {
+                server_ip: ip,
+                server_port: port
+            };
+            
+            const headers = {
+                "Content-Type": "application/json"
+            };
+            
+            fetch(url, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Success:', data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+
+        function sendrecordlocal(ip, port) {
+            const url = `http://${configData.addres}/api/v0.1/addrecordlocal`;
+            
+            const data = {
+                server_ip: ip,
+                server_port: port
+            };
+            
+            const headers = {
+                "Content-Type": "application/json"
+            };
+            
+            fetch(url, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Success:', data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
     <script type="module" src="../script/common.js"></script>
     <script type="module" src="../script/index.js"></script>
     <script> require("../render.js"); </script>

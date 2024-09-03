@@ -1,18 +1,9 @@
 const { shell, ipcRenderer } = require('electron');
-
 const configData = require('../config/config.json');
 
+
 function readPBFromConfig() {
-    console.log(configData.pb);
-    if (configData.pb == "true") {
-      // Значение config.pb истинно (true), выполняем блок кода
-      console.log('Значение config.pb истинно');
-      return true;
-    } else {
-      // Значение config.pb ложно (false), выполняем блок кода
-      console.log('Значение config.pb ложно');
-      return false;
-    }
+    return configData.pb === "true";
 };
 
 let currentServers = new Map();
@@ -174,6 +165,12 @@ function updateServerCards(currentServers, data, contentElement) {
 
             
             let bpb = readPBFromConfig();
+            const regex = /^steam:\/\/connect\/([\d\.]+):(\d+)$/;
+            const match = serverInfo.connect_server.match(regex);
+            const ip_server = match[1];
+            const port_server = match[2];
+            console.log(ip_server);
+            console.log(port_server);
             if (bpb == true) {
                 serverBlock.innerHTML = `
                     <div class="image" style="background-image: 
@@ -181,7 +178,7 @@ function updateServerCards(currentServers, data, contentElement) {
                         url('${imageUrl}');"></div>
                     <div class="people title-text">${serverInfo.now_players}/${serverInfo.max_players}</div>
                     <div class="play">
-                        <div class="play-icon" data-connect-server="${serverInfo.connect_server}">
+                        <div class="play-icon" data-connect-server="${serverInfo.connect_server}" onclick="sendrecordlocal('${ip_server}', '${port_server}')">
                             <img src="../image/icon/play-icon.png" alt="Play-icon" draggable="false">
                         </div>
                         <div class="circle-icon">
@@ -199,7 +196,7 @@ function updateServerCards(currentServers, data, contentElement) {
                     <div class="ping title-text ${pingClass}">${pingMs}</div>
                     <div class="people title-text">${serverInfo.now_players}/${serverInfo.max_players}</div>
                     <div class="play">
-                        <div class="play-icon" data-connect-server="${serverInfo.connect_server}">
+                        <div class="play-icon" data-connect-server="${serverInfo.connect_server}" onclick="sendrecordglobal('${ip_server}', '${port_server}')">
                             <img src="../image/icon/play-icon.png" alt="Play-icon" draggable="false">
                         </div>
                         <div class="circle-icon">
@@ -263,8 +260,47 @@ document.addEventListener("DOMContentLoaded", function() {
     if (bpb == true) {
         url = `http://${configData.addres}/api/v0.1/getinfoserverslocal`;
     } else {
-        url = `http://${configData.addres}/api/v0.1/getinfoservers`;
+        url = `http://${configData.addres}/api/v0.1/getinfoserversglobal`;
     }
     fetchAndUpdateContent(url);
     setInterval(() => fetchAndUpdateContent(url), 15000);
 });
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const toggle = document.getElementById('networkModeToggle');
+
+    // Инициализация состояния слайдера
+    toggle.checked = readPBFromConfig();
+
+    // Обработка события переключения слайдера
+    toggle.addEventListener('change', function () {
+        const newValue = toggle.checked;
+        const saveButton = document.querySelector('.save');
+        saveButton.classList.toggle('active');
+        saveButton.setAttribute('data-new-value', newValue);
+    });
+
+    // Обработка события нажатия на кнопку "Сохранить"
+    document.querySelector('.save').addEventListener('click', function () {
+        if (this.classList.contains('active')) {
+            const newConfigValue = this.getAttribute('data-new-value');
+            
+            // Отправляем новое значение в основной процесс
+            ipcRenderer.send('save-config', { pb: newConfigValue });
+
+            // Перезагрузка страницы или другой код
+            // location.reload();
+        }
+    });
+});
+
+// Слушаем событие конфигурационного сохранения и перезагружаем страницу
+ipcRenderer.on('config-saved', () => {
+    location.reload();
+});
+
+// Если вам нужно обработать клик на изображении для переключения настроек:
+document.querySelector('.setting img').onclick = function() {
+    document.querySelector('.settings-menu').classList.toggle('active');
+};
